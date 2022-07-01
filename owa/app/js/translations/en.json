@@ -9,7 +9,7 @@
     "downloadCsv": "Download csv"
   },
   "systemAdministration": "System Administration",
-  "reportCharts": {
+  "cflcharts": {
     "title": "Report Charts",
     "configuration": "Report Charts Configuration",
     "visualization": "Report Charts Visualization",

@@ -23,7 +23,7 @@ const autoprefixer = require("autoprefixer");
 
 const env = process.env.NODE_ENV;
 
-const THIS_APP_ID = "reportcharts";
+const THIS_APP_ID = "cflcharts";
 
 var plugins = [];
 const nodeModules = {};
@@ -44,7 +44,7 @@ var getConfig = function () {
     // create file with defaults if not found
     config = {
       'LOCAL_OWA_FOLDER': '/home/user/.cfl-dev/owa/',
-      'APP_ENTRY_POINT': 'http://localhost:8080/openmrs/owa/reportcharts/index.html'
+      'APP_ENTRY_POINT': 'http://localhost:8080/openmrs/owa/cflcharts/index.html'
     };
 
     fs.writeFile('config.json', JSON.stringify(config));
@@ -213,8 +213,8 @@ plugins.push(
 var webpackConfig = {
   entry: {
     regenerator_runtime: 'regenerator-runtime/runtime',
-    app: `${__dirname}/app/js/reportcharts`,
-    css: `${__dirname}/app/css/reportcharts.scss`,
+    app: `${__dirname}/app/js/Reportcharts`,
+    css: `${__dirname}/app/css/Reportcharts.scss`,
     vendor: [
       "react",
       "redux",

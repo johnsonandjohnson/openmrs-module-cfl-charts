@@ -88,7 +88,7 @@ const DataVisualization = ({
 
   return (
     <div className="data-visualization">
-      <FormattedMessage id="reportCharts.visualization" tagName="h1" />
+      <FormattedMessage id="cflcharts.visualization" tagName="h1" />
       {errorMessage ? (
         <div className="error">{errorMessage}</div>
       ) : loading && !reportsList.length ? (

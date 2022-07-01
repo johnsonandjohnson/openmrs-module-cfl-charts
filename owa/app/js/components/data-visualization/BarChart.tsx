@@ -139,7 +139,7 @@ const BarChart = ({
       ) : (
         <>
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.xAxis' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.xAxis' })}
             showPlaceholder={!!filterByXAxsis.length}
             options={options}
             onChange={handleOnChange}

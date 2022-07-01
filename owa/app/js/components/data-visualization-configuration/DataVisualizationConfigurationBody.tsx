@@ -106,7 +106,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.title' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.title' })}
             showPlaceholder={!!title}
             className={cx({ invalid: showValidationErrors && !title })}
             defaultValue={title}
@@ -117,7 +117,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.type' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.type' })}
             showPlaceholder={!!getValue(CHART_TYPE_KEY)}
             options={CHART_TYPE_OPTIONS}
             value={getValue(CHART_TYPE_KEY)}
@@ -133,7 +133,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.xAxis' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.xAxis' })}
             showPlaceholder={!!getValue(CHART_X_AXIS_KEY)}
             options={getOptions()}
             value={getValue(CHART_X_AXIS_KEY)}
@@ -147,7 +147,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.yAxis' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.yAxis' })}
             showPlaceholder={!!getValue(CHART_Y_AXIS_KEY)}
             options={getOptions()}
             onChange={handleOptionOnChange}
@@ -163,7 +163,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.legend' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.legend' })}
             showPlaceholder={!!getValue(CHART_LEGEND_KEY)}
             options={getOptions()}
             onChange={handleOptionOnChange}
@@ -177,7 +177,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <TextareaAutosizeWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.description' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.description' })}
             showPlaceholder={!!getValue(CHART_DESCRIPTION_KEY)}
             onBlur={handleInputOnChange}
             defaultValue={description}
@@ -189,7 +189,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.marginTop' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.marginTop' })}
             showPlaceholder
             value={marginTop}
             type="number"
@@ -200,7 +200,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.marginBottom' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.marginBottom' })}
             showPlaceholder
             value={marginBottom}
             type="number"
@@ -213,7 +213,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.marginRight' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.marginRight' })}
             showPlaceholder
             value={marginRight}
             type="number"
@@ -224,7 +224,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.marginLeft' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.marginLeft' })}
             showPlaceholder
             value={marginLeft}
             type="number"
@@ -237,7 +237,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'reportCharts.chart.colors' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.colors' })}
             showPlaceholder={!!colors}
             defaultValue={colors}
             className={cx({ invalid: showValidationErrors && !colors })}

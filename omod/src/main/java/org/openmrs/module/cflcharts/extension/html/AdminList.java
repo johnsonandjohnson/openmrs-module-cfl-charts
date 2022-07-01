@@ -8,7 +8,7 @@
  * a trademark of OpenMRS Inc.
  */
 
-package org.openmrs.module.reportcharts.extension.html;
+package org.openmrs.module.cflcharts.extension.html;
 
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
@@ -16,12 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class defines the links that will appear on the administration page under the "reportcharts.title"
+ * This class defines the links that will appear on the administration page under the "cflcharts.title"
  * heading. This extension is enabled by defining (uncommenting) it in the config.xml file.
  */
 public class AdminList extends AdministrationSectionExt {
 
-  private static final String TITLE = "reportcharts.title";
+  private static final String TITLE = "cflcharts.title";
   /**
    * @see org.openmrs.module.web.extension.AdministrationSectionExt#getMediaType()
    */
@@ -43,7 +43,7 @@ public class AdminList extends AdministrationSectionExt {
   public Map<String, String> getLinks() {
 
     Map<String, String> map = new HashMap<>();
-    map.put("/ms/uiframework/resource/reportcharts/swagger/index.html", "reportcharts.swagger.title");
+    map.put("/ms/uiframework/resource/cflcharts/swagger/index.html", "cflcharts.swagger.title");
     return map;
   }
 

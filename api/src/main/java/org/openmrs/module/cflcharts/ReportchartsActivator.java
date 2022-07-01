@@ -8,10 +8,13 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-package org.openmrs.module.reportcharts;
+package org.openmrs.module.cflcharts;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.GlobalProperty;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
 /**
@@ -23,11 +26,23 @@ public class ReportchartsActivator extends BaseModuleActivator {
 
   @Override
   public void started() {
-    LOGGER.info("Started Reportcharts");
+    createGlobalSettingIfNotExists(ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME,
+        ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DEFAULT_VALUE,
+        ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DESC);
+
+    LOGGER.info("Started CfL Charts");
   }
 
   @Override
   public void stopped() {
-    LOGGER.info("Stopped Reportcharts");
+    LOGGER.info("Stopped CfL Charts");
+  }
+
+  private void createGlobalSettingIfNotExists(String key, String value, String description) {
+    final String existingSetting = Context.getAdministrationService().getGlobalProperty(key);
+    if (StringUtils.isBlank(existingSetting)) {
+      GlobalProperty gp = new GlobalProperty(key, value, description);
+      Context.getAdministrationService().saveGlobalProperty(gp);
+    }
   }
 }

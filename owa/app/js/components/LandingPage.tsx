@@ -16,7 +16,7 @@ const LandingPage = () => (
   <>
     <Row>
       <Col md={12} xs={12}>
-        <FormattedMessage id="reportCharts.title" tagName="h2"/>
+        <FormattedMessage id="cflcharts.title" tagName="h2"/>
       </Col>
     </Row>
     <div className="panel-body">

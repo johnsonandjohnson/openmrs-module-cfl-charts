@@ -33,7 +33,7 @@ const Breadcrumb = () => {
 
   const renderReportChartsCrumb = () => (
     <>
-      <a href={REPORT_CHARTS_URL}>{formatMessage({ id: 'reportCharts.title' })}</a>
+      <a href={REPORT_CHARTS_URL}>{formatMessage({ id: 'cflcharts.title' })}</a>
       {renderDelimiter()}
     </>
   );
@@ -46,18 +46,18 @@ const Breadcrumb = () => {
         return (
           <>
             {renderReportChartsCrumb()}
-            {renderLastCrumb(formatMessage({ id: 'reportCharts.configuration' }))}
+            {renderLastCrumb(formatMessage({ id: 'cflcharts.configuration' }))}
           </>
         )
       case VISUALIZATION_URL_HASH:
         return (
           <>
             {renderReportChartsCrumb()}
-            {renderLastCrumb(formatMessage({ id: 'reportCharts.visualization' }))}
+            {renderLastCrumb(formatMessage({ id: 'cflcharts.visualization' }))}
           </>
         )
       default:
-        return renderLastCrumb(formatMessage({ id: 'reportCharts.title' }));
+        return renderLastCrumb(formatMessage({ id: 'cflcharts.title' }));
     }
   };
 

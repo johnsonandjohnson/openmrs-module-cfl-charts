@@ -5,13 +5,13 @@
     <id>${project.parent.artifactId}</id>
     <name>${project.parent.name}</name>
     <version>${project.parent.version}</version>
-    <package>org.openmrs.module.reportcharts</package>
+    <package>org.openmrs.module.cflcharts</package>
     <author>Connect for Life</author>
     <description>
         ${project.parent.description}
     </description>
 
-    <activator>org.openmrs.module.reportcharts.ReportchartsActivator</activator>
+    <activator>org.openmrs.module.cflcharts.ReportchartsActivator</activator>
 
     <require_version>${openmrsPlatformVersion}</require_version>
 
@@ -27,7 +27,7 @@
 
     <extension>
         <point>org.openmrs.admin.list</point>
-        <class>org.openmrs.module.reportcharts.extension.html.AdminList</class>
+        <class>org.openmrs.module.cflcharts.extension.html.AdminList</class>
     </extension>
 
     <privilege/>

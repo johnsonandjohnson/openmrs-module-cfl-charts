@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -8,12 +9,13 @@
     </parent>
 
     <groupId>org.openmrs.module</groupId>
-    <artifactId>reportcharts</artifactId>
+    <artifactId>cflcharts</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Report Charts module</name>
     <description>
-        <!-- TODO: Short description -->
+        The Charts module allows to configure selected reports and then see the data visualization presented on the charts as
+        well as downloading a csv file with the data presented in the chart.
     </description>
 
     <scm>
@@ -254,7 +256,8 @@
                         <configuration>
                             <!-- Workaround to https://code.google.com/p/powermock/issues/detail?id=504 -->
                             <argLine>-XX:-UseSplitVerifier
-                                -Dlog4j.configuration=file:src/test/resources/log4j.properties</argLine>
+                                -Dlog4j.configuration=file:src/test/resources/log4j.properties
+                            </argLine>
                             <systemPropertyVariables>
                                 <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
                             </systemPropertyVariables>

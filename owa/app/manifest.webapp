@@ -1,6 +1,6 @@
 {
   "version": "1.0.0-SNAPSHOT",
-  "name": "reportcharts",
+  "name": "cflcharts",
   "description": "OWA project for Report Charts Module",
   "launch_path": "index.html",
   "icons": {

@@ -2,11 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openmrs.module</groupId>
-        <artifactId>reportcharts</artifactId>
+        <artifactId>cflcharts</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>reportcharts-omod</artifactId>
+    <artifactId>cflcharts-omod</artifactId>
     <packaging>jar</packaging>
     <name>Report Charts OMOD</name>
     <description>Omod submodule for Report Charts</description>
@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.openmrs.module</groupId>
-            <artifactId>reportcharts-api</artifactId>
+            <artifactId>cflcharts-api</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -99,7 +99,7 @@
                                     <artifactId>${project.parent.artifactId}-owa</artifactId>
                                     <version>${project.parent.version}</version>
                                     <type>zip</type>
-                                    <destFileName>reportcharts.owa</destFileName>
+                                    <destFileName>cflcharts.owa</destFileName>
                                 </artifactItem>
                             </artifactItems>
                             <outputDirectory>${project.build.directory}/classes/web/module/owas</outputDirectory>
@@ -129,7 +129,7 @@
                     <apiSources>
                         <apiSource>
                             <springmvc>true</springmvc>
-                            <locations>org.openmrs.module.reportcharts.web</locations>
+                            <locations>org.openmrs.module.cflcharts.web</locations>
                             <basePath>/openmrs/ws</basePath>
                             <info>
                                 <title>Report Charts Module REST API</title>
@@ -171,7 +171,7 @@
                         <version>${jacocoVersion}</version>
                         <configuration>
                             <excludes>
-                                <exclude>org/openmrs/module/reportcharts/api/**</exclude>
+                                <exclude>org/openmrs/module/cflcharts/api/**</exclude>
                             </excludes>
                         </configuration>
                         <executions>

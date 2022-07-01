@@ -17,7 +17,7 @@ interface IChartDescription {
 
 const ChartDescription = ({ description }: IChartDescription) => (
   <div className="chart-description">
-    <FormattedMessage id="reportCharts.chart.description" tagName="h5" />
+    <FormattedMessage id="cflcharts.chart.description" tagName="h5" />
     <p>{description}</p>
   </div>
 );

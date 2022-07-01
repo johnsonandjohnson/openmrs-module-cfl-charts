@@ -2,11 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.openmrs.module</groupId>
-        <artifactId>reportcharts</artifactId>
+        <artifactId>cflcharts</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>reportcharts-api</artifactId>
+    <artifactId>cflcharts-api</artifactId>
     <packaging>jar</packaging>
     <name>Report Charts API</name>
     <description>API project for Report Charts</description>

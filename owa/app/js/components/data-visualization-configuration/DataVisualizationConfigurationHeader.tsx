@@ -63,7 +63,7 @@ const DataVisualizationConfigurationHeader = ({
     <div className="input-container">
       <SelectWithPlaceholder
         showPlaceholder={!!reportConfig.uuid}
-        placeholder={formatMessage({ id: 'reportCharts.report' })}
+        placeholder={formatMessage({ id: 'cflcharts.report' })}
         options={reportsOptions}
         onChange={handleReportOnChange}
         theme={selectDefaultTheme}

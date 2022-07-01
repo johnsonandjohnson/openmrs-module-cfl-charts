@@ -13,7 +13,7 @@ import { ROOT_URL } from './openmrs';
 
 export const REPORTS_UUID_LIST = 'cflui.reportsForDataVisualizationConfiguration.uuid.list';
 export const REPORTS_CONFIGURATION = 'cflui.reportsDataVisualizationConfiguration';
-export const REPORT_CHARTS_URL = `${ROOT_URL}owa/reportcharts/index.html#/`;
+export const REPORT_CHARTS_URL = `${ROOT_URL}owa/cflcharts/index.html#/`;
 export const CONFIGURATION_URL_HASH = '/configuration';
 export const VISUALIZATION_URL_HASH = '/visualization';
 export const REPORT_CHARTS = 'Report Charts';

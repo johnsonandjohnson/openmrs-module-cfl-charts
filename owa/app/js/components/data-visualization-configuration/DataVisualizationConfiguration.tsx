@@ -31,7 +31,7 @@ import { ISettingsState } from '../../shared/models/settings';
 import { omit } from 'lodash';
 import { EMPTY_STRING } from '../../shared/constants/input';
 import { errorToast } from '@bit/soldevelo-omrs.cfl-components.toast-handler';
-import '../../../css/inputs.scss';
+import '../../../css/Inputs.scss';
 
 interface IStore {
   settings: ISettingsState;
@@ -99,7 +99,7 @@ const DataVisualizationConfiguration = ({
     setShowValidationErrors(showValidationErrors);
 
     if (showValidationErrors) {
-      return errorToast(formatMessage({ id: 'reportCharts.configurationNotSaved' }));
+      return errorToast(formatMessage({ id: 'cflcharts.configurationNotSaved' }));
     }
 
     if (isConfigurationExist) {
@@ -115,7 +115,7 @@ const DataVisualizationConfiguration = ({
 
   return (
     <div className="data-visualization-configuration">
-      <FormattedMessage id="reportCharts.configuration" tagName="h1" />
+      <FormattedMessage id="cflcharts.configuration" tagName="h1" />
       {!getAllReports ? (
         <div className="spinner">
           <Spinner />
@@ -136,7 +136,7 @@ const DataVisualizationConfiguration = ({
           })}
           <div className="d-flex justify-content-end mt-4 mb-2">
             <Button className="btn btn-primary" onClick={addReportConfigurationBlock}>
-              <FormattedMessage id="reportCharts.addNewReport" />
+              <FormattedMessage id="cflcharts.addNewReport" />
             </Button>
           </div>
           <div className="mt-5 pb-5">

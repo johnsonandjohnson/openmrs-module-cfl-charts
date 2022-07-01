@@ -1,9 +1,9 @@
 {
-  "name": "reportcharts",
+  "name": "cflcharts",
   "version": "1.0.0",
   "description": "OWA project for Report Charts Module",
   "dependencies": {
-    "@bit/soldevelo-cfl.omrs-components.customize": "1.0.9",
+    "@bit/soldevelo-cfl.omrs-components.customize": "^1.0.10",
     "@bit/soldevelo-omrs.cfl-components.error-description": "^1.0.0",
     "@bit/soldevelo-omrs.cfl-components.localization-wrapper": "^1.0.2",
     "@bit/soldevelo-omrs.cfl-components.private-route": "^1.0.13",
