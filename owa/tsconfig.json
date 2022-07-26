@@ -25,8 +25,7 @@
     "typeRoots": ["node_modules/@types"],
   },
   "include": [
-    "app",
-    "node_modules/@bit/soldevelo-cfl.omrs-components.customize"
+    "app"
   ],
   "exclude": [
     "node_modules"

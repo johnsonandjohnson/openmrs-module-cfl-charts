@@ -12,7 +12,7 @@ import { combineReducers } from 'redux';
 import settings from './setttings';
 import { reducers as openmrsReducers } from '@openmrs/react-components';
 import { reducer as reduxFormReducer } from 'redux-form';
-import customizeReducer, {CustomizeState} from '@bit/soldevelo-cfl.omrs-components.customize/customize.reducer';
+import customizeReducer, {CustomizeState} from '../components/customize/customize.reducer';
 import reports from './data-visualization-configuration';
 import { IDataVisualizationConfigurationState } from '../shared/models/data-visualization';
 
