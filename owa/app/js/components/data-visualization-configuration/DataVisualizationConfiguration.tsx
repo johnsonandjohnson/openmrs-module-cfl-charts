@@ -30,7 +30,7 @@ import { IDataVisualizationConfigurationState, IReportList } from '../../shared/
 import { ISettingsState } from '../../shared/models/settings';
 import { omit } from 'lodash';
 import { EMPTY_STRING } from '../../shared/constants/input';
-import { errorToast } from '@bit/soldevelo-omrs.cfl-components.toast-handler';
+import { errorToast } from '../toast-handler/toast-handler';
 import '../../../css/Inputs.scss';
 
 interface IStore {

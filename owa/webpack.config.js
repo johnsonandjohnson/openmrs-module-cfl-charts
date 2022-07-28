@@ -73,8 +73,7 @@ const rules = [
     loader: "ts-loader",
     options: { allowTsInNodeModules: true },
     include: [
-      path.resolve(__dirname, "app/js"),
-      path.resolve(__dirname, "node_modules/@bit/soldevelo-cfl.omrs-components.customize"),
+      path.resolve(__dirname, "app/js")
     ],
   },
   {
@@ -89,9 +88,6 @@ const rules = [
       path.resolve(__dirname, "node_modules/enzyme"),
       path.resolve(__dirname, "node_modules/cheerio"),
       path.resolve(__dirname, "node_modules/@openmrs/react-components"),
-      path.resolve(__dirname, "node_modules/@bit/soldevelo-omrs.cfl-components"),
-      path.resolve(__dirname, "node_modules/@bit/soldevelo-cfl.omrs-components"),
-      path.resolve(__dirname, "node_modules/@bit/soldevelo-cfl.omrs-components.customize"),
       path.resolve(__dirname, "node_modules/parse5"),
       path.resolve(__dirname, "node_modules/htmlparser2"),
     ]
