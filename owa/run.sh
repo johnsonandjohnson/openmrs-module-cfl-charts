@@ -1,8 +1,10 @@
 #!/bin/bash
 
 HOME_DIR=~
+REPORTCHARTS_REPO=
 REPORTCHARTS_OMOD=cflcharts-1.0.0-SNAPSHOT.omod
 REPORTCHARTS_OMOD_PREFIX=cflcharts
+CFL_REPO=
 
 MODULES_PATH=$HOME_DIR/.cfl-dev/modules
 OWA_PATH=$HOME_DIR/.cfl-dev/owa
