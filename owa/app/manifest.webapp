@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0-SNAPSHOT",
+  "name": "cflcharts",
+  "description": "OWA project for Report Charts Module",
+  "launch_path": "index.html",
+  "icons": {
+    "48": "/img/omrs-button.png"
+  },
+  "developer": {
+    "name": "Connect for Life",
+    "url": ""
+  },
+  "default_locale": "en",
+    "activities": {
+      "openmrs": {
+        "href": "*"
+      }
+    }
+}

@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "module": "esnext",
+    "jsx": "react",
+    "target": "es5",
+    "allowJs": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "downlevelIteration": true,
+    "checkJs": false,
+    "baseUrl": "./",
+    "importHelpers": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "suppressImplicitAnyIndexErrors": true,
+    "lib": ["es2015", "es2017", "dom"],
+    "typeRoots": ["node_modules/@types"],
+  },
+  "include": [
+    "app"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
