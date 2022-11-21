@@ -29,7 +29,8 @@
       "marginBottom": "Chart margin bottom in pixels",
       "marginRight": "Chart margin right in pixels",
       "marginLeft": "Chart margin left in pixels",
-      "colors": "Chart colors"
+      "colors": "Chart colors",
+      "filterBy": "Filter by"
     }
   }
 }

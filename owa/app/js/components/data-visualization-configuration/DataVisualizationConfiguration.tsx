@@ -24,7 +24,8 @@ import {
   REPORTS_UUID_LIST,
   REPORT_CHARTS_URL,
   REPORTS_CONFIGURATION,
-  CHART_DESCRIPTION_KEY
+  CHART_DESCRIPTION_KEY,
+  FILTER_BY_KEY
 } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportList } from '../../shared/models/data-visualization';
 import { ISettingsState } from '../../shared/models/settings';
@@ -87,7 +88,7 @@ const DataVisualizationConfiguration = ({
     let showValidationErrors = false;
 
     reportsConfiguration.forEach(report => {
-      const omittedOptional = omit(report, [CHART_DESCRIPTION_KEY]);
+      const omittedOptional = omit(report, [CHART_DESCRIPTION_KEY, FILTER_BY_KEY]);
 
       Object.keys(omittedOptional).forEach(key => {
         if (omittedOptional[key] === EMPTY_STRING) {

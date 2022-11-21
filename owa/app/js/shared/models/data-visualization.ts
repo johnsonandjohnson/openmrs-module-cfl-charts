@@ -19,7 +19,8 @@ import {
   CHART_TITLE_KEY,
   CHART_TYPE_KEY,
   CHART_X_AXIS_KEY,
-  CHART_Y_AXIS_KEY
+  CHART_Y_AXIS_KEY,
+  FILTER_BY_KEY
 } from '../constants/data-visualization-configuration';
 import { IOption } from './option';
 
@@ -72,6 +73,7 @@ export interface IReportConfiguration {
   [CHART_MARGIN_RIGHT_KEY]: number;
   [CHART_MARGIN_LEFT_KEY]: number;
   [CHART_COLORS_KEY]: string;
+  [FILTER_BY_KEY]: string
 }
 
 export interface IDataVisualizationConfigurationState {
