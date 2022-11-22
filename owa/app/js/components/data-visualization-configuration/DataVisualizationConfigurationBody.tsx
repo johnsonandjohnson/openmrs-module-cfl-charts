@@ -29,7 +29,8 @@ import {
   CHART_MARGIN_RIGHT_KEY,
   CHART_MARGIN_LEFT_KEY,
   CHART_COLORS_KEY,
-  CHART_TYPE_OPTIONS
+  CHART_TYPE_OPTIONS,
+  FILTER_BY_KEY
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
@@ -56,7 +57,7 @@ const DataVisualizationConfigurationBody = ({
   updateReportsConfiguration
 }: IDataVisualizationConfigurationBody) => {
   const { formatMessage } = useIntl();
-  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend } = reportConfig;
+  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, filterBy } = reportConfig;
 
   const getOptions = () => {
     const { columns = [] } = reportData || {};
@@ -64,6 +65,12 @@ const DataVisualizationConfigurationBody = ({
     const unusedOptions = difference(columns, usedOptions) as IOption[] | [];
 
     return unusedOptions.map(option => ({ label: option, value: option }));
+  };
+
+  const getAllOptions = () => {
+    const { columns = [] } = reportData || {};
+
+    return columns.map(option => ({ label: option, value: option }));
   };
 
   const getValue = (value: string) => {
@@ -142,6 +149,7 @@ const DataVisualizationConfigurationBody = ({
             wrapperClassName={cx({ invalid: showValidationErrors && !getValue(CHART_X_AXIS_KEY) })}
             classNamePrefix="default-select"
             theme={selectDefaultTheme}
+            isClearable
           />
           {showValidationErrors && !getValue(CHART_X_AXIS_KEY) && <ValidationError message="common.error.required" />}
         </div>
@@ -156,6 +164,7 @@ const DataVisualizationConfigurationBody = ({
             wrapperClassName={cx({ invalid: showValidationErrors && !getValue(CHART_Y_AXIS_KEY) })}
             classNamePrefix="default-select"
             theme={selectDefaultTheme}
+            isClearable
           />
           {showValidationErrors && !getValue(CHART_Y_AXIS_KEY) && <ValidationError message="common.error.required" />}
         </div>
@@ -172,6 +181,7 @@ const DataVisualizationConfigurationBody = ({
             wrapperClassName={cx({ invalid: showValidationErrors && !getValue(CHART_LEGEND_KEY) })}
             classNamePrefix="default-select"
             theme={selectDefaultTheme}
+            isClearable
           />
           {showValidationErrors && !getValue(CHART_LEGEND_KEY) && <ValidationError message="common.error.required" />}
         </div>
@@ -247,6 +257,19 @@ const DataVisualizationConfigurationBody = ({
           />
           {showValidationErrors && !colors && <ValidationError message="common.error.required" />}
         </div>
+        <div className="input-container">
+          <SelectWithPlaceholder
+            placeholder={formatMessage({ id: 'cflcharts.chart.filterBy' })}
+            showPlaceholder={!!getValue(FILTER_BY_KEY)}
+            options={getAllOptions()}
+            onChange={handleOptionOnChange}
+            value={getValue(FILTER_BY_KEY)}
+            name={FILTER_BY_KEY}
+            classNamePrefix="default-select"
+            theme={selectDefaultTheme}
+            isClearable
+          />
+      </div>
       </div>
     </>
   );
