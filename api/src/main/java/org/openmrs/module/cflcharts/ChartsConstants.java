@@ -1,6 +1,7 @@
 package org.openmrs.module.cflcharts;
 
 public final class ChartsConstants {
+
   public static final String REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME =
       "cflui.reportsForDataVisualizationConfiguration.uuid.list";
 
