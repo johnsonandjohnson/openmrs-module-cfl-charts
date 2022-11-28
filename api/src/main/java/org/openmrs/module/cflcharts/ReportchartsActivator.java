@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Privilege;
+import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
@@ -26,9 +28,11 @@ public class ReportchartsActivator extends BaseModuleActivator {
 
   @Override
   public void started() {
-    createGlobalSettingIfNotExists(ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME,
+    createGlobalSettingIfNotExists(
+        ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME,
         ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DEFAULT_VALUE,
         ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DESC);
+    addChartsPrivileges();
 
     LOGGER.info("Started CfL Charts");
   }
@@ -43,6 +47,20 @@ public class ReportchartsActivator extends BaseModuleActivator {
     if (StringUtils.isBlank(existingSetting)) {
       GlobalProperty gp = new GlobalProperty(key, value, description);
       Context.getAdministrationService().saveGlobalProperty(gp);
+    }
+  }
+
+  private void addChartsPrivileges() {
+    createChartsPrivilege(ChartsConstants.VIEW_CHARTS_PRIVILEGE_NAME,
+        ChartsConstants.VIEW_CHARTS_PRIVILEGE_DESCRIPTION);
+    createChartsPrivilege(ChartsConstants.CONFIGURE_CHARTS_PRIVILEGE_NAME,
+        ChartsConstants.CONFIGURE_CHARTS_PRIVILEGE_DESCRIPTION);
+  }
+
+  private void createChartsPrivilege(String privilegeName, String privilegeDescription) {
+    UserService userService = Context.getUserService();
+    if (userService.getPrivilege(privilegeName) == null) {
+      userService.savePrivilege(new Privilege(privilegeName, privilegeDescription));
     }
   }
 }
