@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Button, Spinner } from 'reactstrap';
 import { getSettingByQuery, getSettings, createSetting, updateSetting } from '../../reducers/setttings';
+import { getRoles } from '../../reducers/role';
 import {
   getReports,
   addReportConfigurationBlock,
@@ -25,7 +26,8 @@ import {
   REPORT_CHARTS_URL,
   REPORTS_CONFIGURATION,
   CHART_DESCRIPTION_KEY,
-  FILTER_BY_KEY
+  FILTER_BY_KEY,
+  SELECT_ROLES_KEY
 } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportList } from '../../shared/models/data-visualization';
 import { ISettingsState } from '../../shared/models/settings';
@@ -57,13 +59,15 @@ const DataVisualizationConfiguration = ({
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
   updateSetting,
-  createSetting
+  createSetting,
+  getRoles
 }: StateProps & DispatchProps) => {
   const { formatMessage } = useIntl();
 
   useEffect(() => {
     getSettingByQuery(REPORTS_CONFIGURATION);
     getSettings(REPORTS_UUID_LIST);
+    getRoles();
   }, [getSettingByQuery, getSettings]);
 
   useEffect(() => {
@@ -88,7 +92,7 @@ const DataVisualizationConfiguration = ({
     let showValidationErrors = false;
 
     reportsConfiguration.forEach(report => {
-      const omittedOptional = omit(report, [CHART_DESCRIPTION_KEY, FILTER_BY_KEY]);
+      const omittedOptional = omit(report, [CHART_DESCRIPTION_KEY, FILTER_BY_KEY, SELECT_ROLES_KEY]);
 
       Object.keys(omittedOptional).forEach(key => {
         if (omittedOptional[key] === EMPTY_STRING) {
@@ -125,7 +129,6 @@ const DataVisualizationConfiguration = ({
         <div className="inner-content">
           {reportsConfiguration.map((reportConfig, idx) => {
             const currentReportData = reportsList.find(({ uuid }) => reportConfig.uuid === uuid) as IReportList;
-
             return (
               <DataVisualizationConfigurationBlock
                 key={`${reportConfig?.uuid}-${idx}`}
@@ -195,7 +198,8 @@ const mapDispatchToProps = {
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
   updateSetting,
-  createSetting
+  createSetting,
+  getRoles
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

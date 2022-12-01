@@ -30,7 +30,8 @@ import {
   CHART_MARGIN_LEFT_KEY,
   CHART_COLORS_KEY,
   CHART_TYPE_OPTIONS,
-  FILTER_BY_KEY
+  FILTER_BY_KEY,
+  SELECT_ROLES_KEY
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
@@ -41,6 +42,9 @@ interface IStore {
     reportsConfiguration: IReportConfiguration[];
     showValidationErrors: boolean;
   };
+  role: {
+    roles: any;
+  }
 }
 
 interface IDataVisualizationConfigurationBody extends StateProps, DispatchProps {
@@ -54,10 +58,11 @@ const DataVisualizationConfigurationBody = ({
   reportConfig,
   reportsConfiguration,
   showValidationErrors,
+  roles,
   updateReportsConfiguration
 }: IDataVisualizationConfigurationBody) => {
   const { formatMessage } = useIntl();
-  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, filterBy } = reportConfig;
+  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend } = reportConfig;
 
   const getOptions = () => {
     const { columns = [] } = reportData || {};
@@ -72,6 +77,26 @@ const DataVisualizationConfigurationBody = ({
 
     return columns.map(option => ({ label: option, value: option }));
   };
+
+  const getAllUserRoles = () => {
+    return roles.map(option => ({ label: option.display, value: option.uuid }));
+  }
+
+  const getRoleValues = (value: string) => {
+    const savedChartRoles = reportConfig[value];
+    const savedChartRolesArray = savedChartRoles?.split(',') || [];
+    
+    return savedChartRolesArray.map(roleUuid => {
+      const relatedRole = roles.find(role => role.uuid === roleUuid);
+      return relatedRole ? { label: relatedRole.display, value: relatedRole.uuid } : null;  
+    });
+  }
+
+  const handleRoleOnchange = e => {
+    const rolesUuids = e.map(option => option.value).join(',');
+
+    updateConfiguration(SELECT_ROLES_KEY, rolesUuids);
+  }
 
   const getValue = (value: string) => {
     const option = reportConfig[value];
@@ -269,15 +294,32 @@ const DataVisualizationConfigurationBody = ({
             theme={selectDefaultTheme}
             isClearable
           />
+        </div>
       </div>
+      <div className="inline-fields">
+        <div className="input-container">
+            <SelectWithPlaceholder
+              placeholder={formatMessage({ id: 'cflcharts.chart.visibleForRoles' })}
+              showPlaceholder={!!getValue(SELECT_ROLES_KEY)}
+              options={getAllUserRoles()}
+              onChange={e => handleRoleOnchange(e)}
+              value={getRoleValues(SELECT_ROLES_KEY)}
+              name={SELECT_ROLES_KEY}
+              classNamePrefix="default-select"
+              theme={selectDefaultTheme}
+              isMulti
+              type="text"
+            />
+        </div>
       </div>
     </>
   );
 };
 
-const mapStateToProps = ({ reports: { reportsConfiguration, showValidationErrors } }: IStore) => ({
+const mapStateToProps = ({ reports: { reportsConfiguration, showValidationErrors }, role: { roles } }: IStore) => ({
   reportsConfiguration,
-  showValidationErrors
+  showValidationErrors,
+  roles
 });
 
 const mapDispatchToProps = {
