@@ -30,7 +30,8 @@
       "marginRight": "Chart margin right in pixels",
       "marginLeft": "Chart margin left in pixels",
       "colors": "Chart colors",
-      "filterBy": "Filter by"
+      "filterBy": "Filter by",
+      "visibleForRoles": "Visible for user roles (leave empty for all)"
     }
   }
 }
