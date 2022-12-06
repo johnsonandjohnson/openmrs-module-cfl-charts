@@ -16,6 +16,7 @@ import customizeReducer, {CustomizeState} from '../components/customize/customiz
 import reports from './data-visualization-configuration';
 import { IDataVisualizationConfigurationState } from '../shared/models/data-visualization';
 import role from './role';
+import session from './session';
 
 export interface IRootState {
   readonly openmrs: any;
@@ -24,6 +25,7 @@ export interface IRootState {
   readonly reports: IDataVisualizationConfigurationState;
   readonly form: any;
   readonly role: any;
+  readonly session: any;
 }
 
 export default combineReducers<IRootState>({
@@ -32,5 +34,6 @@ export default combineReducers<IRootState>({
   reports,
   openmrs: openmrsReducers,
   form: reduxFormReducer,
-  role
+  role,
+  session
 });
