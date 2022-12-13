@@ -17,7 +17,7 @@ import YScale from './YScale';
 import Bars from './Bars';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
+import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
@@ -183,7 +183,7 @@ const BarChart = ({
           {description && <ChartDescription description={description} />}
           <div className="mt-5 pb-5">
             <div className="d-inline">
-              <Button className="cancel" onClick={() => (window.location.href = REPORT_CHARTS_URL)}>
+              <Button className="cancel" onClick={() => (window.location.href = HOME_PAGE_URL)}>
                 <FormattedMessage id="common.return" />
               </Button>
             </div>

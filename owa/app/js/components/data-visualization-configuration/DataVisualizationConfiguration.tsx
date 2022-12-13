@@ -27,13 +27,14 @@ import {
   REPORTS_CONFIGURATION,
   CHART_DESCRIPTION_KEY,
   FILTER_BY_KEY,
-  SELECT_ROLES_KEY
+  SELECT_ROLES_KEY,
+  CONFIGURE_METADATA_URL
 } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportList } from '../../shared/models/data-visualization';
 import { ISettingsState } from '../../shared/models/settings';
 import { omit } from 'lodash';
 import { EMPTY_STRING } from '../../shared/constants/input';
-import { errorToast } from '../toast-handler/toast-handler';
+import { errorToast, successToast } from '../toast-handler/toast-handler';
 import '../../../css/Inputs.scss';
 
 interface IStore {
@@ -83,10 +84,10 @@ const DataVisualizationConfiguration = ({
   }, [configurationSetting, getAllReports, initialUpdate, loading, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
-    success && onReturn();
+    success && successToast(formatMessage({ id: 'cflcharts.configurationSavedSuccessfully' }));
   }, [success]);
 
-  const onReturn = () => (window.location.href = REPORT_CHARTS_URL);
+  const onReturn = () => (window.location.href = CONFIGURE_METADATA_URL);
 
   const onSave = () => {
     let showValidationErrors = false;

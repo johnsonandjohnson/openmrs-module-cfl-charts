@@ -16,6 +16,7 @@
     "addNewReport": "Add New report",
     "report": "Report",
     "configurationNotSaved": "Not all required fields have been filled. Please try again.",
+    "configurationSavedSuccessfully": "Configuration saved successfully.",
     "chart": {
       "title": "Chart Title",
       "type": "Chart Type",
