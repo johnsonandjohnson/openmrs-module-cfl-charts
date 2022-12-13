@@ -45,14 +45,12 @@ const Breadcrumb = () => {
       case CONFIGURATION_URL_HASH:
         return (
           <>
-            {renderReportChartsCrumb()}
             {renderLastCrumb(formatMessage({ id: 'cflcharts.configuration' }))}
           </>
         )
       case VISUALIZATION_URL_HASH:
         return (
           <>
-            {renderReportChartsCrumb()}
             {renderLastCrumb(formatMessage({ id: 'cflcharts.visualization' }))}
           </>
         )
