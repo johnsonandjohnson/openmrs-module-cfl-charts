@@ -14,11 +14,13 @@ import DataVisualization from './components/data-visualization/DataVisialization
 import DataVisualizationConfiguration from './components/data-visualization-configuration/DataVisualizationConfiguration';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import { Header } from '@openmrs/react-components';
+import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
 
 const Routes = () => (
   <>
     <Customize />
     <Header />
+    <Breadcrumbs />
     <div className="body-wrapper">
       <Router>
         <Switch>
