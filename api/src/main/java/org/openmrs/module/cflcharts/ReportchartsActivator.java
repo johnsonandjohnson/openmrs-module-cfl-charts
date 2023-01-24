@@ -26,7 +26,8 @@ public class ReportchartsActivator extends BaseModuleActivator {
 
   @Override
   public void started() {
-    createGlobalSettingIfNotExists(ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME,
+    createGlobalSettingIfNotExists(
+        ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_NAME,
         ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DEFAULT_VALUE,
         ChartsConstants.REPORTS_FOR_DATA_VISUALIZATION_CONFIGURATION_PROPERTY_DESC);
 

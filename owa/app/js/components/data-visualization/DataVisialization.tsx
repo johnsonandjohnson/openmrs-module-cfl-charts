@@ -17,6 +17,7 @@ import { FormattedMessage } from 'react-intl';
 import { Spinner, Nav, NavItem, NavLink, TabContent, TabPane } from 'reactstrap';
 import { getSettingByQuery } from '../../reducers/setttings';
 import { ISettingsState } from '../../shared/models/settings';
+import { getSession } from '../../reducers/session'
 import { LINE_CHART, REPORTS_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import { initialUpdateReportsConfiguration, getReports } from '../../reducers/data-visualization-configuration';
@@ -24,6 +25,7 @@ import { initialUpdateReportsConfiguration, getReports } from '../../reducers/da
 interface IStore {
   settings: ISettingsState;
   reports: IDataVisualizationConfigurationState;
+  session: any;
 }
 
 const DataVisualization = ({
@@ -33,11 +35,17 @@ const DataVisualization = ({
   reportsConfiguration,
   reportsList,
   errorMessage,
+  userRoles,
   getReports,
   getSettingByQuery,
-  initialUpdateReportsConfiguration
+  initialUpdateReportsConfiguration,
+  getSession
 }: StateProps & DispatchProps) => {
   const [activeTab, setActiveTab] = useState('0');
+
+  useEffect(() => {
+    getSession();
+  }, []);
 
   useEffect(() => {
     getSettingByQuery(REPORTS_CONFIGURATION);
@@ -55,7 +63,11 @@ const DataVisualization = ({
     }
   }, [initialUpdate, reportsList, reportsConfiguration, getReports]);
 
-  const navItems = configurationSetting.map((config: IReportConfiguration, idx: number) => {
+  const authorizedReportConfigs = configurationSetting.filter(config => !config.roles || config.roles?.split(',')
+    .some(chartRoleUuid => userRoles.map(userRole => userRole.uuid)
+    .includes(chartRoleUuid)));
+
+  const navItems = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     return (
       <NavItem key={`${config.uuid}-${idx}`}>
         <NavLink className={cx({ active: activeTab === `${idx}` })} onClick={() => setActiveTab(`${idx}`)}>
@@ -65,7 +77,7 @@ const DataVisualization = ({
     );
   });
 
-  const tabPanes = configurationSetting.map((config: IReportConfiguration, idx: number) => {
+  const tabPanes = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     const { uuid, chartType } = config;
     const reportData = reportsList.find(({ uuid: reportUuid }) => reportUuid === uuid)?.reportData as IReportData[];
     let chartComponent;
@@ -78,7 +90,7 @@ const DataVisualization = ({
         chartComponent = <BarChart report={reportData} config={config} isActive={activeTab === `${idx}`} />;
         break;
     }
-
+    
     return (
       <TabPane key={`${uuid}-${idx}`} tabId={`${idx}`}>
         {chartComponent}
@@ -107,20 +119,23 @@ const DataVisualization = ({
 
 const mapStateToProps = ({
   settings: { setting, loading },
-  reports: { initialUpdate, reportsConfiguration, reportsList, errorMessage }
+  reports: { initialUpdate, reportsConfiguration, reportsList, errorMessage },
+  session: { userRoles }
 }: IStore) => ({
   loading,
   configurationSetting: setting?.value ? JSON.parse(setting.value) : [],
   initialUpdate,
   reportsConfiguration,
   reportsList,
-  errorMessage
+  errorMessage,
+  userRoles
 });
 
 const mapDispatchToProps = {
   getReports,
   getSettingByQuery,
-  initialUpdateReportsConfiguration
+  initialUpdateReportsConfiguration,
+  getSession
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;

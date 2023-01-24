@@ -17,7 +17,7 @@ import YScale from './YScale';
 import Bars from './Bars';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
+import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
@@ -35,7 +35,7 @@ interface IBarChart {
 const BarChart = ({
   isActive,
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title }
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy }
 }: IBarChart) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
@@ -59,7 +59,8 @@ const BarChart = ({
       }
 
       if (!xAsisTypes?.length) {
-        const types = [...new Set(report.map(data => `${data[xAxis]}`))] as string[];
+        const filter = !filterBy ? xAxis : filterBy;
+        const types = [...new Set(report.map(data => `${data[filter]}`))] as string[];
 
         setXAsisTypes(types);
         setFilterByXAxsis(types);
@@ -100,7 +101,8 @@ const BarChart = ({
   const options = xAsisTypes.map(xAxisKey => ({ label: `${xAxisKey}`, value: `${xAxisKey}` }));
 
   const filterData = (filteredXAxis: string[], legends = filterByLegend) => {
-    const clonedDataToDisplay = !filteredXAxis.length ? report : report.filter(data => filteredXAxis.includes(`${data[xAxis]}`));
+    const filter = !filterBy ? xAxis : filterBy;
+    const clonedDataToDisplay = !filteredXAxis.length ? report : report.filter(data => filteredXAxis.includes(`${data[filter]}`));
     const filteredDataToDisplay = clonedDataToDisplay.filter(data => legends.includes(`${data[legend]}`));
 
     setDataToDisplay(filteredDataToDisplay);
@@ -139,7 +141,7 @@ const BarChart = ({
       ) : (
         <>
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.xAxis' })}
+            placeholder={formatMessage({ id: 'cflcharts.chart.filterBy' })}
             showPlaceholder={!!filterByXAxsis.length}
             options={options}
             onChange={handleOnChange}
@@ -181,7 +183,7 @@ const BarChart = ({
           {description && <ChartDescription description={description} />}
           <div className="mt-5 pb-5">
             <div className="d-inline">
-              <Button className="cancel" onClick={() => (window.location.href = REPORT_CHARTS_URL)}>
+              <Button className="cancel" onClick={() => (window.location.href = HOME_PAGE_URL)}>
                 <FormattedMessage id="common.return" />
               </Button>
             </div>
