@@ -16,7 +16,7 @@ import { Button, Spinner } from 'reactstrap';
 import { getSettingByQuery, getSettings, createSetting, updateSetting } from '../../reducers/setttings';
 import { getRoles } from '../../reducers/role';
 import {
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors
@@ -55,7 +55,7 @@ const DataVisualizationConfiguration = ({
   success,
   getSettingByQuery,
   getSettings,
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
@@ -73,9 +73,9 @@ const DataVisualizationConfiguration = ({
 
   useEffect(() => {
     if (reportsUuidList?.length && !loading && !getAllReports) {
-      getReports(reportsUuidList);
+      getReportMetadata(reportsUuidList);
     }
-  }, [reportsUuidList, loading, getAllReports, getReports]);
+  }, [reportsUuidList, loading, getAllReports, getReportMetadata]);
 
   useEffect(() => {
     if (configurationSetting.length && !loading && getAllReports && !initialUpdate) {
@@ -194,7 +194,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = {
   getSettingByQuery,
   getSettings,
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
