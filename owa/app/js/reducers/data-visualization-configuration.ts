@@ -20,8 +20,8 @@ import {
 } from '../shared/models/data-visualization';
 
 const ACTION_TYPES = {
-  GET_REPORT: 'report/GET_REPORT',
   GET_REPORTS: 'report/GET_REPORTS',
+  GET_REPORTS_METADATA: 'report/GET_REPORTS_METADATA',
   ADD_REPORT_CONFIGURATION_BLOCK: 'report/ADD_REPORT_CONFIGURATION_BLOCK',
   UPDATE_REPORTS_CONFIGURATION: 'report/UPDATE_REPORTS_CONFIGURATION',
   INITIAL_REPORTS_CONFIGURATION: 'report/INITIAL_REPORTS_CONFIGURATION',
@@ -45,11 +45,13 @@ const initialState: IDataVisualizationConfigurationState = {
 const reducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case REQUEST(ACTION_TYPES.GET_REPORTS):
+    case REQUEST(ACTION_TYPES.GET_REPORTS_METADATA):
       return {
         ...state,
         loading: true
       };
-    case FAILURE(ACTION_TYPES.GET_REPORTS): {
+    case FAILURE(ACTION_TYPES.GET_REPORTS):
+    case FAILURE(ACTION_TYPES.GET_REPORTS_METADATA): {
       const {
         response: {
           data: {
@@ -64,7 +66,8 @@ const reducer = (state = initialState, action: AnyAction) => {
         loading: false
       };
     }
-    case SUCCESS(ACTION_TYPES.GET_REPORTS): {
+    case SUCCESS(ACTION_TYPES.GET_REPORTS):
+    case SUCCESS(ACTION_TYPES.GET_REPORTS_METADATA): {
       const reportsList = action.payload.map(
         ({
           data: {
@@ -136,7 +139,12 @@ export default reducer;
 
 export const getReports = (uuids: string[]) => ({
   type: ACTION_TYPES.GET_REPORTS,
-  payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}reportingrest/reportdata/${uuid}`)))
+  payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}cflcharts/reportdata/${uuid}`)))
+});
+
+export const getReportMetadata = (uuids: string[]) => ({
+  type: ACTION_TYPES.GET_REPORTS_METADATA,
+  payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}cflcharts/reportmetadata/${uuid}`)))
 });
 
 export const addReportConfigurationBlock = () => ({
