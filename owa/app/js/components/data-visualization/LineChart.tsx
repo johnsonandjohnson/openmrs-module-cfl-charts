@@ -17,12 +17,14 @@ import YScale from './YScale';
 import XScale from './XScale';
 import Lines from './Lines';
 import { Button, Spinner } from 'reactstrap';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import ChartDescription from './ChartDescription';
 import ChartTitle from './ChartTitle';
 import ExportChartDataButton from './ExportChartDataButton';
+import { Switch } from '../common/switch/Switch';
+import '../data-visualization-configuration/DataVisualizationConfiguration.scss';
 
 interface ILineChart {
   chartIdx: number;
@@ -33,17 +35,19 @@ interface ILineChart {
 
 const LineChart = ({
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title },
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph },
   isActive
 }: ILineChart) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
+  const { formatMessage } = useIntl();
 
   const [dataToDisplay, setDataToDisplay] = useState<IReportData[]>([]);
   const [legendTypes, setLegendTypes] = useState<string[]>([]);
   const [filterByLegend, setFilterByLegend] = useState<string[]>([]);
   const [chartWidth, setChartWidth] = useState<number>(0);
   const [chartHeight, setChartHeight] = useState<number>(0);
+  const [showTable, setShowTable] = useState<boolean>(false);
 
   useEffect(() => {
     if (report?.length) {
@@ -135,12 +139,24 @@ const LineChart = ({
             />
           </svg>
           {description && <ChartDescription description={description} />}
-          <SummaryChartTable
+          <div className="data-visualization-configuration-switch">
+            {showTableUnderGraph && <Switch
+              id={undefined}
+              formatMessage={formatMessage}
+              labelTranslationId={formatMessage({ id: "common.showTable" })}
+              checked={showTable}
+              checkedTranslationId="common.switch.on"
+              uncheckedTranslationId="common.switch.off"
+              onChange={() => setShowTable(() => !showTable)}
+              disabled={false}
+            />}
+          </div>
+          {showTable && <SummaryChartTable
             xAxis={xAxis}
             legendTypes={filterByLegend}
             groupedAndSummedDataByXAxis={groupedAndSummedDataByXAxis}
             groupedAndSummedDataByLegend={groupedAndSummedDataByLegend}
-          />
+          />}
           <div className="mt-5 pb-5">
             <div className="d-inline">
               <Button className="cancel" onClick={() => (window.location.href = HOME_PAGE_URL)}>
