@@ -11,7 +11,7 @@
     "save": "Save",
     "grandTotal": "Grand Total",
     "downloadCsv": "Download csv",
-    "showTable": "Show Table"
+    "showResultTable": "Show Result Table"
   },
   "systemAdministration": "System Administration",
   "cflcharts": {

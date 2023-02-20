@@ -144,7 +144,7 @@ const DataVisualizationConfigurationBody = ({
 
   const handleShowDataSwitch = (capturedValue: boolean) => {
     updateConfiguration(SHOW_TABLE_UNDER_GRAPH, capturedValue);
-  }
+  };
 
   return (
     <>
@@ -328,16 +328,16 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <div className="data-visualization-configuration-switch">
-          {shouldShowTableDataSwitchBeDisplayed && <Switch
-                id={`data-visualization-configuration-switch`}
-                formatMessage={formatMessage}
-                labelTranslationId={formatMessage({ id: 'cflcharts.chart.showTableUnderGraph' })}
-                checked={showTableUnderGraph(SHOW_TABLE_UNDER_GRAPH)}
-                checkedTranslationId="common.switch.on"
-                uncheckedTranslationId="common.switch.off"
-                onChange={value => handleShowDataSwitch(value)}
-                disabled={false}
-              />}
+            {shouldShowTableDataSwitchBeDisplayed && <Switch
+              id={`data-visualization-configuration-switch`}
+              formatMessage={formatMessage}
+              labelTranslationId={formatMessage({ id: 'cflcharts.chart.showTableUnderGraph' })}
+              checked={showTableUnderGraph(SHOW_TABLE_UNDER_GRAPH)}
+              checkedTranslationId="common.switch.on"
+              uncheckedTranslationId="common.switch.off"
+              onChange={value => handleShowDataSwitch(value)}
+              disabled={false}
+            />}
           </div>
         </div>
       </div>

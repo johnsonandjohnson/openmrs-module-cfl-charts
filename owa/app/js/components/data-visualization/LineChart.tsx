@@ -104,6 +104,10 @@ const LineChart = ({
     setFilterByLegend(filteredLegend.sort());
   };
 
+  const handleShowTableSwitchOnChange = () => {
+    setShowTable(() => !showTable)
+  };
+
   return (
     <>
       {!legendTypes.length && !chartWidth ? (
@@ -141,13 +145,13 @@ const LineChart = ({
           {description && <ChartDescription description={description} />}
           <div className="data-visualization-configuration-switch">
             {showTableUnderGraph && <Switch
-              id={undefined}
+              id={"showTableSwitch"}
               formatMessage={formatMessage}
-              labelTranslationId={formatMessage({ id: "common.showTable" })}
+              labelTranslationId={formatMessage({ id: "common.showResultTable" })}
               checked={showTable}
               checkedTranslationId="common.switch.on"
               uncheckedTranslationId="common.switch.off"
-              onChange={() => setShowTable(() => !showTable)}
+              onChange={handleShowTableSwitchOnChange}
               disabled={false}
             />}
           </div>
