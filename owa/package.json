@@ -44,6 +44,7 @@
     "papaparse": "^5.3.1",
     "prop-types": "^15.6.2",
     "ramda": "^0.24.0",
+    "rc-switch": "^3.2.2",
     "react": "^16.14.0",
     "react-bootstrap": "^0.32.3",
     "react-chat-elements": "^10.8.0",
