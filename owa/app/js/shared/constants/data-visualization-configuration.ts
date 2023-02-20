@@ -37,7 +37,8 @@ export const CHART_TYPE_OPTIONS = [
   { label: LINE_CHART, value: LINE_CHART }
 ];
 export const FILTER_BY_KEY = 'filterBy';
-export const SELECT_ROLES_KEY = 'roles'
+export const SELECT_ROLES_KEY = 'roles';
+export const SHOW_TABLE_UNDER_GRAPH = 'showTableUnderGraph'
 
 export const DEFAULT_REPORT_CONFIGURATION = {
   uuid: EMPTY_STRING,
@@ -54,5 +55,6 @@ export const DEFAULT_REPORT_CONFIGURATION = {
   [CHART_MARGIN_LEFT_KEY]: 60,
   [CHART_COLORS_KEY]: '#ea5545, #f46a9b, #ef9b20, #edbf33, #ede15b, #bdcf32, #87bc45, #27aeef, #b33dc6',
   [FILTER_BY_KEY]: EMPTY_STRING,
-  [SELECT_ROLES_KEY]: EMPTY_STRING
+  [SELECT_ROLES_KEY]: EMPTY_STRING,
+  [SHOW_TABLE_UNDER_GRAPH]: false
 };
