@@ -8,11 +8,11 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
 import cx from 'classnames';
 import { connect } from 'react-redux';
 import { useIntl } from 'react-intl';
-import { difference, values } from 'lodash';
+import { difference } from 'lodash';
 import { updateReportsConfiguration, removeReport } from '../../reducers/data-visualization-configuration';
 import { ZERO } from '../../shared/constants/input';
 import { SelectWithPlaceholder, InputWithPlaceholder, TextareaAutosizeWithPlaceholder } from '../common/form/withPlaceholder';
@@ -32,8 +32,7 @@ import {
   CHART_TYPE_OPTIONS,
   FILTER_BY_KEY,
   SELECT_ROLES_KEY,
-  SHOW_TABLE_UNDER_GRAPH,
-  LINE_CHART
+  SHOW_TABLE_UNDER_GRAPH
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
@@ -67,7 +66,6 @@ const DataVisualizationConfigurationBody = ({
 }: IDataVisualizationConfigurationBody) => {
   const { formatMessage } = useIntl();
   const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, chartType } = reportConfig;
-  const shouldShowTableDataSwitchBeDisplayed = chartType === LINE_CHART;
 
   const getOptions = () => {
     const { columns = [] } = reportData || {};
@@ -311,24 +309,24 @@ const DataVisualizationConfigurationBody = ({
       </div>
       <div className="inline-fields">
         <div className="input-container">
-            <SelectWithPlaceholder
-              placeholder={formatMessage({ id: 'cflcharts.chart.visibleForRoles' })}
-              showPlaceholder={!!getValue(SELECT_ROLES_KEY)}
-              options={getAllUserRoles()}
-              onChange={e => handleRoleOnchange(e)}
-              value={getRoleValues(SELECT_ROLES_KEY)}
-              name={SELECT_ROLES_KEY}
-              classNamePrefix="default-select"
-              theme={selectDefaultTheme}
-              isMulti
-              type="text"
-            />
+          <SelectWithPlaceholder
+            placeholder={formatMessage({ id: 'cflcharts.chart.visibleForRoles' })}
+            showPlaceholder={!!getValue(SELECT_ROLES_KEY)}
+            options={getAllUserRoles()}
+            onChange={e => handleRoleOnchange(e)}
+            value={getRoleValues(SELECT_ROLES_KEY)}
+            name={SELECT_ROLES_KEY}
+            classNamePrefix="default-select"
+            theme={selectDefaultTheme}
+            isMulti
+            type="text"
+          />
         </div>
       </div>
       <div className="inline-fields">
         <div className="input-container">
           <div className="data-visualization-configuration-switch">
-            {shouldShowTableDataSwitchBeDisplayed && <Switch
+            <Switch
               id={`data-visualization-configuration-switch`}
               formatMessage={formatMessage}
               labelTranslationId={formatMessage({ id: 'cflcharts.chart.showTableUnderGraph' })}
@@ -337,7 +335,7 @@ const DataVisualizationConfigurationBody = ({
               uncheckedTranslationId="common.switch.off"
               onChange={value => handleShowDataSwitch(value)}
               disabled={false}
-            />}
+            />
           </div>
         </div>
       </div>
