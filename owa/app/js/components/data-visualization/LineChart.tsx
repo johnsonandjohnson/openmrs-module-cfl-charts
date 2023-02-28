@@ -18,7 +18,7 @@ import XScale from './XScale';
 import Lines from './Lines';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
+import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import ChartDescription from './ChartDescription';
 import ChartTitle from './ChartTitle';

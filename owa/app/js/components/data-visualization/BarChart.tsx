@@ -17,7 +17,7 @@ import YScale from './YScale';
 import Bars from './Bars';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
+import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
@@ -25,6 +25,8 @@ import { IOption } from '../../shared/models/option';
 import ChartDescription from './ChartDescription';
 import ChartTitle from './ChartTitle';
 import ExportChartDataButton from './ExportChartDataButton';
+import SummaryChartTable from './SummaryChartTable';
+import { Switch } from '../common/switch/Switch';
 
 interface IBarChart {
   isActive: boolean;
@@ -35,7 +37,7 @@ interface IBarChart {
 const BarChart = ({
   isActive,
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy }
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy, showTableUnderGraph }
 }: IBarChart) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
@@ -48,11 +50,12 @@ const BarChart = ({
   const [filterByXAxsis, setFilterByXAxsis] = useState<string[]>([]);
   const [chartWidth, setChartWidth] = useState<number>(0);
   const [chartHeight, setChartHeight] = useState<number>(0);
+  const [showTable, setShowTable] = useState<boolean>(false);
 
   useEffect(() => {
     if (report?.length) {
       if (!legendTypes?.length) {
-        const types = [...new Set(report.map(data => `${data[legend]}`))] as string[];
+        const types = [...new Set(report.map(data => `${data[legend]}`))].sort() as string[];
 
         setLegendTypes(types);
         setFilterByLegend(types);
@@ -96,7 +99,7 @@ const BarChart = ({
     marginTop
   });
 
-  const { yScale, xScale, xSubgroup, colorsScaleOrdinal, groupedAndSummedDataByXAxis } = controller;
+  const { yScale, xScale, xSubgroup, colorsScaleOrdinal, groupedAndSummedDataByXAxis, groupedAndSummedDataByLegend } = controller;
 
   const options = xAsisTypes.map(xAxisKey => ({ label: `${xAxisKey}`, value: `${xAxisKey}` }));
 
@@ -129,7 +132,11 @@ const BarChart = ({
     }
 
     filterData(filterByXAxsis, clonedFilterByLegend);
-    setFilterByLegend(clonedFilterByLegend);
+    setFilterByLegend(clonedFilterByLegend.sort());
+  };
+
+  const handleShowTableSwitchOnChange = () => {
+    setShowTable(() => !showTable)
   };
 
   return (
@@ -181,6 +188,24 @@ const BarChart = ({
             />
           </svg>
           {description && <ChartDescription description={description} />}
+          <div className="data-visualization-configuration-switch">
+            {showTableUnderGraph && <Switch
+              id="showTableSwitch"
+              formatMessage={formatMessage}
+              labelTranslationId={formatMessage({ id: "common.showResultTable" })}
+              checked={showTable}
+              checkedTranslationId="common.switch.on"
+              uncheckedTranslationId="common.switch.off"
+              onChange={handleShowTableSwitchOnChange}
+              disabled={false}
+            />}
+          </div>
+          {showTable && <SummaryChartTable
+            xAxis={xAxis}
+            legendTypes={filterByLegend}
+            groupedAndSummedDataByXAxis={groupedAndSummedDataByXAxis}
+            groupedAndSummedDataByLegend={groupedAndSummedDataByLegend}
+          />}
           <div className="mt-5 pb-5">
             <div className="d-inline">
               <Button className="cancel" onClick={() => (window.location.href = HOME_PAGE_URL)}>
