@@ -39,7 +39,7 @@ const ExportChartDataButton = ({ data, chartType, filterByLegend, filterByXAxsis
   return (
     <div className="d-inline pull-right confirm-button-container">
       <Button className="save" onClick={exportDataToCsv}>
-        <FormattedMessage id="common.downloadCsv" />
+        <FormattedMessage id="cflcharts.downloadCsv" />
       </Button>
     </div>
   );
