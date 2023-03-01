@@ -38,7 +38,9 @@
       "colors": "Chart colors",
       "filterBy": "Filter by",
       "visibleForRoles": "Visible for user roles (leave empty for all)",
-      "showTableUnderGraph": "Allow user to show table under the graph"
+      "showTableUnderGraph": "Allow user to show table under the graph",
+      "tableDescription": "The graph, including it's filters, is based on the below data."
+
     }
   }
 }

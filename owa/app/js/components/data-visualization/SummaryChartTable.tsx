@@ -22,36 +22,44 @@ interface ISummaryChartTable {
 }
 
 const SummaryChartTable = ({ xAxis, legendTypes, groupedAndSummedDataByXAxis, groupedAndSummedDataByLegend }: ISummaryChartTable) => (
-  <Table hover striped responsive size="sm">
-    <thead>
-      <tr className="sticky sticky-top">
-        <th>{xAxis}</th>
-        {legendTypes.map(legend => (
-          <th key={`${legend}`}>{`${legend}`}</th>
-        ))}
-      </tr>
-    </thead>
-    <tbody>
-      {groupedAndSummedDataByXAxis.map(({ xAxisKey, legendData }) => (
-        <tr key={xAxisKey}>
-          <td className="sticky sticky-left">{moment(xAxisKey).format('DD-MM-YYYY')}</td>
-          {legendTypes.map(legend => {
-            const value = legendData.find(({ legendKey }) => `${legendKey}` === `${legend}`)?.legendSum || '-';
+  <>
+    <FormattedMessage id="cflcharts.chart.tableDescription" tagName="span" />
+    <Table hover striped responsive size="sm">
+      <thead>
+        <tr className="sticky sticky-top">
+          <th>{xAxis}</th>
+          {legendTypes.map(legend => (
+            <th key={`${legend}`}>{`${legend}`}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {groupedAndSummedDataByXAxis.map(({ xAxisKey, legendData }) => (
+          <tr key={xAxisKey}>
+            <td className="sticky sticky-left">{xAxisKey}</td>
+            {legendTypes.map(legend => {
+              const value = legendData.find(({ legendKey }) => `${legendKey}` === `${legend}`)?.legendSum || '-';
 
-            return <td key={`${legend}`}>{value}</td>;
+              return <td key={`${legend}`}>{value}</td>;
+            })}
+          </tr>
+        ))}
+        <tr className="sticky sticky-bottom">
+          <td className="sticky sticky-left">
+            <FormattedMessage id="common.grandTotal" tagName="span" />
+          </td>
+          {legendTypes.map(type => {
+            const element = groupedAndSummedDataByLegend.find(obj => obj.legendKey === type);
+            if (element) {
+              return <td key={`${element.legendKey}`}>{element.legendSum}</td>
+            } else {
+              return <td key={`${type}`}>-</td>
+            }
           })}
         </tr>
-      ))}
-      <tr className="sticky sticky-bottom">
-        <td className="sticky sticky-left">
-          <FormattedMessage id="common.grandTotal" tagName="span" />
-        </td>
-        {groupedAndSummedDataByLegend.map(({ legendKey, legendSum }) => (
-          <td key={`${legendKey}`}>{legendSum}</td>
-        ))}
-      </tr>
-    </tbody>
-  </Table>
+      </tbody>
+    </Table>
+  </>
 );
 
 export default SummaryChartTable;
