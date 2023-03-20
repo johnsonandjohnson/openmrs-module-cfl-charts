@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import SummaryChartTable from './SummaryChartTable';
 import ChartLegend from './ChartLegend';
@@ -17,7 +18,7 @@ import YScale from './YScale';
 import XScale from './XScale';
 import Lines from './Lines';
 import { Button, Spinner } from 'reactstrap';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import ChartDescription from './ChartDescription';
@@ -36,11 +37,11 @@ interface ILineChart {
 const LineChart = ({
   report,
   config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph },
-  isActive
-}: ILineChart) => {
+  isActive,
+  intl
+}: PropsWithIntl<ILineChart>) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
-  const { formatMessage } = useIntl();
 
   const [dataToDisplay, setDataToDisplay] = useState<IReportData[]>([]);
   const [legendTypes, setLegendTypes] = useState<string[]>([]);
@@ -146,8 +147,8 @@ const LineChart = ({
           <div className="data-visualization-configuration-switch">
             {showTableUnderGraph && <Switch
               id={"showTableSwitch"}
-              formatMessage={formatMessage}
-              labelTranslationId={formatMessage({ id: "common.showResultTable" })}
+              formatMessage={intl.formatMessage}
+              labelTranslationId={intl.formatMessage({ id: "cflcharts.showResultTable" })}
               checked={showTable}
               checkedTranslationId="common.switch.on"
               uncheckedTranslationId="common.switch.off"
@@ -181,4 +182,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default injectIntl(LineChart);

@@ -9,12 +9,12 @@
  */
 
 import React from 'react';
+import { injectIntl } from 'react-intl';
 import ValidationError from '../common/form/ValidationError';
 import cx from 'classnames';
 import { connect } from 'react-redux';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
-import { useIntl } from 'react-intl';
 import { differenceBy } from 'lodash';
 import { updateReportsConfiguration, removeReport } from '../../reducers/data-visualization-configuration';
 import { DEFAULT_REPORT_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
@@ -37,9 +37,9 @@ const DataVisualizationConfigurationHeader = ({
   reportsList,
   reportsConfiguration,
   showValidationErrors,
-  updateReportsConfiguration
-}: IDataVisualizationConfigurationHeader) => {
-  const { formatMessage } = useIntl();
+  updateReportsConfiguration,
+  intl
+}: PropsWithIntl<IDataVisualizationConfigurationHeader>) => {
   const unusedReportsUuid = differenceBy(reportsList, reportsConfiguration, 'uuid') as IReportList[];
   const reportsOptions = unusedReportsUuid.map(({ uuid, name, description }) => ({ label: name, value: uuid, description }));
 
@@ -63,7 +63,7 @@ const DataVisualizationConfigurationHeader = ({
     <div className="input-container">
       <SelectWithPlaceholder
         showPlaceholder={!!reportConfig.uuid}
-        placeholder={formatMessage({ id: 'cflcharts.report' })}
+        placeholder={intl.formatMessage({ id: 'cflcharts.report' })}
         options={reportsOptions}
         onChange={handleReportOnChange}
         theme={selectDefaultTheme}
@@ -90,4 +90,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfigurationHeader);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfigurationHeader));

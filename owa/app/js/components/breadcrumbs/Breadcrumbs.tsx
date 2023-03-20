@@ -8,54 +8,51 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 import React from 'react';
-import { useIntl } from 'react-intl';
-import { createHashHistory } from 'history';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ROOT_URL } from '../../shared/constants/openmrs';
-import { CONFIGURATION_URL_HASH, REPORT_CHARTS_URL, VISUALIZATION_URL_HASH } from '../../shared/constants/data-visualization-configuration';
+import {FormattedMessage} from 'react-intl';
+import {createHashHistory} from 'history';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {ROOT_URL} from '../../shared/constants/openmrs';
+import {
+  CONFIGURATION_URL_HASH,
+  VISUALIZATION_URL_HASH
+} from '../../shared/constants/data-visualization-configuration';
 
 const Breadcrumb = () => {
-  const { formatMessage } = useIntl();
-  const { location: { pathname } } = createHashHistory();
+  const {location: {pathname}} = createHashHistory();
 
   const renderDelimiter = () => (
     <span className="breadcrumb-link-item breadcrumb-delimiter">
-      <FontAwesomeIcon size="sm" icon={['fas', 'chevron-right']} />
+      <FontAwesomeIcon size="sm" icon={['fas', 'chevron-right']}/>
     </span>
   );
 
   const renderHomeCrumb = () => (
     <>
-      <a href={ROOT_URL} className="breadcrumb-link-item home-crumb" />
+      <a href={ROOT_URL} className="breadcrumb-link-item home-crumb"/>
       {renderDelimiter()}
     </>
   );
-
-  const renderReportChartsCrumb = () => (
-    <>
-      <a href={REPORT_CHARTS_URL}>{formatMessage({ id: 'cflcharts.title' })}</a>
-      {renderDelimiter()}
-    </>
-  );
-
-  const renderLastCrumb = (txt:string) => <span className="breadcrumb-last-item">{txt}</span>
 
   const renderCrumbs = () => {
-    switch(pathname) {
+    switch (pathname) {
       case CONFIGURATION_URL_HASH:
         return (
-          <>
-            {renderLastCrumb(formatMessage({ id: 'cflcharts.configuration' }))}
-          </>
-        )
+          <span className="breadcrumb-last-item">
+            <FormattedMessage id="cflcharts.configuration"/>
+          </span>
+        );
       case VISUALIZATION_URL_HASH:
         return (
-          <>
-            {renderLastCrumb(formatMessage({ id: 'cflcharts.visualization' }))}
-          </>
-        )
+          <span className="breadcrumb-last-item">
+            <FormattedMessage id="cflcharts.visualization"/>
+          </span>
+        );
       default:
-        return renderLastCrumb(formatMessage({ id: 'cflcharts.title' }));
+        return (
+          <span className="breadcrumb-last-item">
+            <FormattedMessage id="cflcharts.title"/>
+          </span>
+        );
     }
   };
 

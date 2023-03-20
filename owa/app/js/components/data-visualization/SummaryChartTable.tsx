@@ -46,7 +46,7 @@ const SummaryChartTable = ({ xAxis, legendTypes, groupedAndSummedDataByXAxis, gr
         ))}
         <tr className="sticky sticky-bottom">
           <td className="sticky sticky-left">
-            <FormattedMessage id="common.grandTotal" tagName="span" />
+            <FormattedMessage id="cflcharts.grandTotal" tagName="span" />
           </td>
           {legendTypes.map(type => {
             const element = groupedAndSummedDataByLegend.find(obj => obj.legendKey === type);

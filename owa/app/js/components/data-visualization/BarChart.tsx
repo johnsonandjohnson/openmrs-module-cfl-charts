@@ -9,6 +9,7 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import useController from './DataVisualizationController';
 import ChartLegend from './ChartLegend';
@@ -16,7 +17,7 @@ import XScale from './XScale';
 import YScale from './YScale';
 import Bars from './Bars';
 import { Button, Spinner } from 'reactstrap';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
@@ -37,11 +38,11 @@ interface IBarChart {
 const BarChart = ({
   isActive,
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy, showTableUnderGraph }
-}: IBarChart) => {
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy, showTableUnderGraph },
+  intl
+}: PropsWithIntl<IBarChart>) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
-  const { formatMessage } = useIntl();
 
   const [dataToDisplay, setDataToDisplay] = useState<IReportData[]>([]);
   const [legendTypes, setLegendTypes] = useState<string[]>([]);
@@ -148,7 +149,7 @@ const BarChart = ({
       ) : (
         <>
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.filterBy' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.filterBy' })}
             showPlaceholder={!!filterByXAxsis.length}
             options={options}
             onChange={handleOnChange}
@@ -191,8 +192,8 @@ const BarChart = ({
           <div className="data-visualization-configuration-switch">
             {showTableUnderGraph && <Switch
               id="showTableSwitch"
-              formatMessage={formatMessage}
-              labelTranslationId={formatMessage({ id: "common.showResultTable" })}
+              formatMessage={intl.formatMessage}
+              labelTranslationId={intl.formatMessage({ id: "cflcharts.showResultTable" })}
               checked={showTable}
               checkedTranslationId="common.switch.on"
               uncheckedTranslationId="common.switch.off"
@@ -227,4 +228,4 @@ const BarChart = ({
   );
 };
 
-export default BarChart;
+export default injectIntl(BarChart);
