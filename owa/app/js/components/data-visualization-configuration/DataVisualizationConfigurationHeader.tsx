@@ -20,7 +20,7 @@ import { updateReportsConfiguration, removeReport } from '../../reducers/data-vi
 import { DEFAULT_REPORT_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList, IReportsOptions } from '../../shared/models/data-visualization';
 
-interface IStore {ECMAScript
+interface IStore {
   reports: {
     reportsList: IReportList[];
     reportsConfiguration: IReportConfiguration[];

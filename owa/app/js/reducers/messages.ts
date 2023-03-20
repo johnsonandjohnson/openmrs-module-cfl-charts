@@ -38,7 +38,6 @@ const reducer = (state = initialState, action) => {
     case SUCCESS(ACTION_TYPES.GET_MESSAGES):
       const messagesRaw = action.payload.data;
       const messages = typeof messagesRaw == 'object' ? messagesRaw : JSON.parse(messagesRaw);
-      console.log(messages);
       return {
         ...initialState,
         messages,
