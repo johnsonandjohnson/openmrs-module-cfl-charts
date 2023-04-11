@@ -9,21 +9,21 @@
  */
 
 import React, { useEffect } from 'react';
+import { injectIntl } from 'react-intl';
 import DataVisualizationConfigurationBlock from './DataVisualizationConfigurationBlock';
 import { connect } from 'react-redux';
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { Button, Spinner } from 'reactstrap';
 import { getSettingByQuery, getSettings, createSetting, updateSetting } from '../../reducers/setttings';
 import { getRoles } from '../../reducers/role';
 import {
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors
 } from '../../reducers/data-visualization-configuration';
 import {
   REPORTS_UUID_LIST,
-  REPORT_CHARTS_URL,
   REPORTS_CONFIGURATION,
   CHART_DESCRIPTION_KEY,
   FILTER_BY_KEY,
@@ -55,15 +55,15 @@ const DataVisualizationConfiguration = ({
   success,
   getSettingByQuery,
   getSettings,
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
   updateSetting,
   createSetting,
-  getRoles
-}: StateProps & DispatchProps) => {
-  const { formatMessage } = useIntl();
+  getRoles,
+  intl
+}: PropsWithIntl<StateProps & DispatchProps>) => {
 
   useEffect(() => {
     getSettingByQuery(REPORTS_CONFIGURATION);
@@ -73,9 +73,9 @@ const DataVisualizationConfiguration = ({
 
   useEffect(() => {
     if (reportsUuidList?.length && !loading && !getAllReports) {
-      getReports(reportsUuidList);
+      getReportMetadata(reportsUuidList);
     }
-  }, [reportsUuidList, loading, getAllReports, getReports]);
+  }, [reportsUuidList, loading, getAllReports, getReportMetadata]);
 
   useEffect(() => {
     if (configurationSetting.length && !loading && getAllReports && !initialUpdate) {
@@ -84,7 +84,7 @@ const DataVisualizationConfiguration = ({
   }, [configurationSetting, getAllReports, initialUpdate, loading, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
-    success && successToast(formatMessage({ id: 'cflcharts.configurationSavedSuccessfully' }));
+    success && successToast(intl.formatMessage({ id: 'cflcharts.configurationSavedSuccessfully' }));
   }, [success]);
 
   const onReturn = () => (window.location.href = CONFIGURE_METADATA_URL);
@@ -105,7 +105,7 @@ const DataVisualizationConfiguration = ({
     setShowValidationErrors(showValidationErrors);
 
     if (showValidationErrors) {
-      return errorToast(formatMessage({ id: 'cflcharts.configurationNotSaved' }));
+      return errorToast(intl.formatMessage({ id: 'cflcharts.configurationNotSaved' }));
     }
 
     if (isConfigurationExist) {
@@ -194,7 +194,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = {
   getSettingByQuery,
   getSettings,
-  getReports,
+  getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
   setShowValidationErrors,
@@ -206,4 +206,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfiguration);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfiguration));

@@ -9,6 +9,7 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { injectIntl } from 'react-intl';
 import * as d3 from 'd3';
 import SummaryChartTable from './SummaryChartTable';
 import ChartLegend from './ChartLegend';
@@ -18,11 +19,13 @@ import XScale from './XScale';
 import Lines from './Lines';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
-import { HOME_PAGE_URL, REPORT_CHARTS_URL } from '../../shared/constants/data-visualization-configuration';
+import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import ChartDescription from './ChartDescription';
 import ChartTitle from './ChartTitle';
 import ExportChartDataButton from './ExportChartDataButton';
+import { Switch } from '../common/switch/Switch';
+import '../data-visualization-configuration/DataVisualizationConfiguration.scss';
 
 interface ILineChart {
   chartIdx: number;
@@ -33,9 +36,10 @@ interface ILineChart {
 
 const LineChart = ({
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title },
-  isActive
-}: ILineChart) => {
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph },
+  isActive,
+  intl
+}: PropsWithIntl<ILineChart>) => {
   const chartRef = useRef<SVGSVGElement>(null);
   const chartRefCurrent = chartRef.current;
 
@@ -44,6 +48,7 @@ const LineChart = ({
   const [filterByLegend, setFilterByLegend] = useState<string[]>([]);
   const [chartWidth, setChartWidth] = useState<number>(0);
   const [chartHeight, setChartHeight] = useState<number>(0);
+  const [showTable, setShowTable] = useState<boolean>(false);
 
   useEffect(() => {
     if (report?.length) {
@@ -100,6 +105,10 @@ const LineChart = ({
     setFilterByLegend(filteredLegend.sort());
   };
 
+  const handleShowTableSwitchOnChange = () => {
+    setShowTable(() => !showTable)
+  };
+
   return (
     <>
       {!legendTypes.length && !chartWidth ? (
@@ -135,12 +144,24 @@ const LineChart = ({
             />
           </svg>
           {description && <ChartDescription description={description} />}
-          <SummaryChartTable
+          <div className="data-visualization-configuration-switch">
+            {showTableUnderGraph && <Switch
+              id={"showTableSwitch"}
+              formatMessage={intl.formatMessage}
+              labelTranslationId={intl.formatMessage({ id: "cflcharts.showResultTable" })}
+              checked={showTable}
+              checkedTranslationId="common.switch.on"
+              uncheckedTranslationId="common.switch.off"
+              onChange={handleShowTableSwitchOnChange}
+              disabled={false}
+            />}
+          </div>
+          {showTable && <SummaryChartTable
             xAxis={xAxis}
             legendTypes={filterByLegend}
             groupedAndSummedDataByXAxis={groupedAndSummedDataByXAxis}
             groupedAndSummedDataByLegend={groupedAndSummedDataByLegend}
-          />
+          />}
           <div className="mt-5 pb-5">
             <div className="d-inline">
               <Button className="cancel" onClick={() => (window.location.href = HOME_PAGE_URL)}>
@@ -161,4 +182,4 @@ const LineChart = ({
   );
 };
 
-export default LineChart;
+export default injectIntl(LineChart);

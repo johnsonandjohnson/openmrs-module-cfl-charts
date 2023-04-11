@@ -17,6 +17,7 @@ import reports from './data-visualization-configuration';
 import { IDataVisualizationConfigurationState } from '../shared/models/data-visualization';
 import role from './role';
 import session from './session';
+import messages from './messages';
 
 export interface IRootState {
   readonly openmrs: any;
@@ -26,6 +27,7 @@ export interface IRootState {
   readonly form: any;
   readonly role: any;
   readonly session: any;
+  readonly messages: any;
 }
 
 export default combineReducers<IRootState>({
@@ -35,5 +37,6 @@ export default combineReducers<IRootState>({
   openmrs: openmrsReducers,
   form: reduxFormReducer,
   role,
-  session
+  session,
+  messages
 });

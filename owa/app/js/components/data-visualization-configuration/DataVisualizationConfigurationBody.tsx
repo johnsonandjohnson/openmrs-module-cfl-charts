@@ -9,9 +9,9 @@
  */
 
 import React, { ChangeEvent } from 'react';
+import { injectIntl } from 'react-intl';
 import cx from 'classnames';
 import { connect } from 'react-redux';
-import { useIntl } from 'react-intl';
 import { difference } from 'lodash';
 import { updateReportsConfiguration, removeReport } from '../../reducers/data-visualization-configuration';
 import { ZERO } from '../../shared/constants/input';
@@ -31,11 +31,14 @@ import {
   CHART_COLORS_KEY,
   CHART_TYPE_OPTIONS,
   FILTER_BY_KEY,
-  SELECT_ROLES_KEY
+  SELECT_ROLES_KEY,
+  SHOW_TABLE_UNDER_GRAPH
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
 import ValidationError from '../common/form/ValidationError';
+import { Switch } from '../common/switch/Switch';
+import './DataVisualizationConfiguration.scss';
 
 interface IStore {
   reports: {
@@ -59,10 +62,10 @@ const DataVisualizationConfigurationBody = ({
   reportsConfiguration,
   showValidationErrors,
   roles,
-  updateReportsConfiguration
-}: IDataVisualizationConfigurationBody) => {
-  const { formatMessage } = useIntl();
-  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend } = reportConfig;
+  updateReportsConfiguration,
+  intl
+}: PropsWithIntl<IDataVisualizationConfigurationBody>) => {
+  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, chartType } = reportConfig;
 
   const getOptions = () => {
     const { columns = [] } = reportData || {};
@@ -120,7 +123,7 @@ const DataVisualizationConfigurationBody = ({
     updateConfiguration(key, value);
   };
 
-  const updateConfiguration = (key: string, value: string | number) => {
+  const updateConfiguration = (key: string, value: string | number | boolean) => {
     const updatedReportsConfiguration = reportsConfiguration.map(report =>
       report.uuid === reportConfig?.uuid
         ? {
@@ -133,12 +136,20 @@ const DataVisualizationConfigurationBody = ({
     updateReportsConfiguration(updatedReportsConfiguration);
   };
 
+  const showTableUnderGraph = (key: string) => {
+    return reportConfig[key];
+  };
+
+  const handleShowDataSwitch = (capturedValue: boolean) => {
+    updateConfiguration(SHOW_TABLE_UNDER_GRAPH, capturedValue);
+  };
+
   return (
     <>
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.title' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.title' })}
             showPlaceholder={!!title}
             className={cx({ invalid: showValidationErrors && !title })}
             defaultValue={title}
@@ -149,7 +160,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.type' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.type' })}
             showPlaceholder={!!getValue(CHART_TYPE_KEY)}
             options={CHART_TYPE_OPTIONS}
             value={getValue(CHART_TYPE_KEY)}
@@ -165,7 +176,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.xAxis' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.xAxis' })}
             showPlaceholder={!!getValue(CHART_X_AXIS_KEY)}
             options={getOptions()}
             value={getValue(CHART_X_AXIS_KEY)}
@@ -180,7 +191,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.yAxis' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.yAxis' })}
             showPlaceholder={!!getValue(CHART_Y_AXIS_KEY)}
             options={getOptions()}
             onChange={handleOptionOnChange}
@@ -197,7 +208,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.legend' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.legend' })}
             showPlaceholder={!!getValue(CHART_LEGEND_KEY)}
             options={getOptions()}
             onChange={handleOptionOnChange}
@@ -212,7 +223,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <TextareaAutosizeWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.description' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.description' })}
             showPlaceholder={!!getValue(CHART_DESCRIPTION_KEY)}
             onBlur={handleInputOnChange}
             defaultValue={description}
@@ -224,7 +235,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.marginTop' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.marginTop' })}
             showPlaceholder
             value={marginTop}
             type="number"
@@ -235,7 +246,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.marginBottom' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.marginBottom' })}
             showPlaceholder
             value={marginBottom}
             type="number"
@@ -248,7 +259,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.marginRight' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.marginRight' })}
             showPlaceholder
             value={marginRight}
             type="number"
@@ -259,7 +270,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.marginLeft' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.marginLeft' })}
             showPlaceholder
             value={marginLeft}
             type="number"
@@ -272,7 +283,7 @@ const DataVisualizationConfigurationBody = ({
       <div className="inline-fields">
         <div className="input-container">
           <InputWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.colors' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.colors' })}
             showPlaceholder={!!colors}
             defaultValue={colors}
             className={cx({ invalid: showValidationErrors && !colors })}
@@ -284,7 +295,7 @@ const DataVisualizationConfigurationBody = ({
         </div>
         <div className="input-container">
           <SelectWithPlaceholder
-            placeholder={formatMessage({ id: 'cflcharts.chart.filterBy' })}
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.filterBy' })}
             showPlaceholder={!!getValue(FILTER_BY_KEY)}
             options={getAllOptions()}
             onChange={handleOptionOnChange}
@@ -298,18 +309,34 @@ const DataVisualizationConfigurationBody = ({
       </div>
       <div className="inline-fields">
         <div className="input-container">
-            <SelectWithPlaceholder
-              placeholder={formatMessage({ id: 'cflcharts.chart.visibleForRoles' })}
-              showPlaceholder={!!getValue(SELECT_ROLES_KEY)}
-              options={getAllUserRoles()}
-              onChange={e => handleRoleOnchange(e)}
-              value={getRoleValues(SELECT_ROLES_KEY)}
-              name={SELECT_ROLES_KEY}
-              classNamePrefix="default-select"
-              theme={selectDefaultTheme}
-              isMulti
-              type="text"
+          <SelectWithPlaceholder
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.visibleForRoles' })}
+            showPlaceholder={!!getValue(SELECT_ROLES_KEY)}
+            options={getAllUserRoles()}
+            onChange={e => handleRoleOnchange(e)}
+            value={getRoleValues(SELECT_ROLES_KEY)}
+            name={SELECT_ROLES_KEY}
+            classNamePrefix="default-select"
+            theme={selectDefaultTheme}
+            isMulti
+            type="text"
+          />
+        </div>
+      </div>
+      <div className="inline-fields">
+        <div className="input-container">
+          <div className="data-visualization-configuration-switch">
+            <Switch
+              id={`data-visualization-configuration-switch`}
+              formatMessage={intl.formatMessage}
+              labelTranslationId={intl.formatMessage({ id: 'cflcharts.chart.showTableUnderGraph' })}
+              checked={showTableUnderGraph(SHOW_TABLE_UNDER_GRAPH)}
+              checkedTranslationId="common.switch.on"
+              uncheckedTranslationId="common.switch.off"
+              onChange={value => handleShowDataSwitch(value)}
+              disabled={false}
             />
+          </div>
         </div>
       </div>
     </>
@@ -330,4 +357,4 @@ const mapDispatchToProps = {
 type StateProps = ReturnType<typeof mapStateToProps>;
 type DispatchProps = typeof mapDispatchToProps;
 
-export default connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfigurationBody);
+export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DataVisualizationConfigurationBody));

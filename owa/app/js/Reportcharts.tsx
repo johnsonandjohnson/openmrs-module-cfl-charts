@@ -9,15 +9,12 @@
 
 import React from 'react';
 import Routes from './Routes';
-import initStore, { history } from './config/redux-store';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import { toast } from 'react-toastify';
-import { loadIcons } from './config/icon-loader';
-import { IntlProvider } from 'react-intl';
-import en from './translations/en.json';
-import flatten from 'flat';
+import initStore, {history} from './config/redux-store';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import {ConnectedRouter} from 'connected-react-router';
+import {toast} from 'react-toastify';
+import {loadIcons} from './config/icon-loader';
 import 'react-toastify/dist/ReactToastify.css';
 import '@openmrs/style-referenceapplication/lib/referenceapplication.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -27,21 +24,20 @@ import '../css/font-awesome.min.css';
 import '../css/Inputs.scss';
 import '../css/Reportcharts.scss';
 import 'babel-polyfill';
+import TranslationProvider from "./components/translation/translation-provider";
 
 loadIcons();
 toast.configure();
 const store = initStore();
-const messages = flatten(en);
-const locale = 'en';
 
 render(
   <React.StrictMode>
-    <IntlProvider locale={locale} messages={messages}>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <TranslationProvider>
           {Routes()}
-        </ConnectedRouter>
-      </Provider>
-    </IntlProvider>
+        </TranslationProvider>
+      </ConnectedRouter>
+    </Provider>
   </React.StrictMode>
-, document.getElementById('app'));
+  , document.getElementById('app'));
