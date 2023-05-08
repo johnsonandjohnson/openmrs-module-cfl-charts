@@ -28,7 +28,9 @@ const Breadcrumb = () => {
 
   const renderHomeCrumb = () => (
     <>
-      <a href={ROOT_URL} className="breadcrumb-link-item home-crumb"/>
+      <a href={ROOT_URL} className="breadcrumb-link-item home-crumb">
+        <FormattedMessage id="cfl.home.title"/>
+      </a>
       {renderDelimiter()}
     </>
   );
