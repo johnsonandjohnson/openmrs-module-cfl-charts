@@ -22,7 +22,8 @@ import {
   CHART_Y_AXIS_KEY,
   FILTER_BY_KEY,
   SELECT_ROLES_KEY,
-  SHOW_TABLE_UNDER_GRAPH
+  SHOW_TABLE_UNDER_GRAPH,
+  CHART_Y_AXIS_TYPE_KEY
 } from '../constants/data-visualization-configuration';
 import { IOption } from './option';
 
@@ -78,6 +79,7 @@ export interface IReportConfiguration {
   [FILTER_BY_KEY]: string;
   [SELECT_ROLES_KEY]: string;
   [SHOW_TABLE_UNDER_GRAPH]: boolean;
+  [CHART_Y_AXIS_TYPE_KEY]: string;
 }
 
 export interface IDataVisualizationConfigurationState {
