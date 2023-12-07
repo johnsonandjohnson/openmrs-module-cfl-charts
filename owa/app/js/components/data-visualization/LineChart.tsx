@@ -36,7 +36,7 @@ interface ILineChart {
 
 const LineChart = ({
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph },
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph, yAxisNumbersType },
   isActive,
   intl
 }: PropsWithIntl<ILineChart>) => {
@@ -119,7 +119,7 @@ const LineChart = ({
         <div className="chart">
           <svg width={chartWidth + marginLeft + marginRight} height={chartHeight + marginTop + marginBottom} ref={chartRef}>
             <ChartTitle chartRef={chartRefCurrent} chartWidth={chartWidth} marginTop={marginTop} title={title} />
-            <YScale chartRef={chartRefCurrent} yScale={yScale} chartWidth={chartWidth} marginLeft={marginLeft} />
+            <YScale chartRef={chartRefCurrent} yScale={yScale} chartWidth={chartWidth} marginLeft={marginLeft} yAxisNumbersType={yAxisNumbersType} />
             <XScale chartRef={chartRefCurrent} xScale={xScale} chartHeight={chartHeight} chartType={chartType} />
             <ChartLegend
               legendTypes={legendTypes}

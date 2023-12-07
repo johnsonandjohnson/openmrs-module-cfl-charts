@@ -38,7 +38,7 @@ interface IBarChart {
 const BarChart = ({
   isActive,
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy, showTableUnderGraph },
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, filterBy, showTableUnderGraph, yAxisNumbersType },
   intl
 }: PropsWithIntl<IBarChart>) => {
   const chartRef = useRef<SVGSVGElement>(null);
@@ -160,7 +160,7 @@ const BarChart = ({
           />
           <svg width={chartWidth + marginLeft + marginRight} height={chartHeight + marginTop + marginBottom} ref={chartRef}>
             <ChartTitle chartRef={chartRefCurrent} chartWidth={chartWidth} marginTop={marginTop} title={title} />
-            <YScale chartRef={chartRefCurrent} yScale={yScale} chartWidth={chartWidth} marginLeft={marginLeft} />
+            <YScale chartRef={chartRefCurrent} yScale={yScale} chartWidth={chartWidth} marginLeft={marginLeft} yAxisNumbersType={yAxisNumbersType} />
             <XScale
               chartRef={chartRefCurrent}
               xScale={xScale}

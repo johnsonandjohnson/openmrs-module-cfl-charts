@@ -10,22 +10,30 @@
 
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
+import { Y_AXIS_INTEGER_NUMBERS_KEY } from '../../shared/constants/data-visualization-configuration';
 
 interface IYScale {
   chartRef: SVGSVGElement | null;
   yScale: d3.ScaleLinear<number, number, never>;
   chartWidth: number;
   marginLeft: number;
+  yAxisNumbersType: string;
 }
 
-const YScale = ({ chartRef, yScale, chartWidth, marginLeft }: IYScale) => {
+const YScale = ({ chartRef, yScale, chartWidth, marginLeft, yAxisNumbersType }: IYScale) => {
   useEffect(() => {
     if (chartWidth && chartRef) {
+      const yScaleAxis = d3.axisLeft(yScale);
+
+      if (yAxisNumbersType === Y_AXIS_INTEGER_NUMBERS_KEY) {
+        yScaleAxis.tickValues(yScale.ticks().filter(tick => Number.isInteger(tick)));
+      }
+
       d3.select(chartRef)
         .select('.yScale')
         .attr('transform', `translate(${marginLeft},0)`)
         //@ts-ignore
-        .call(d3.axisLeft(yScale))
+        .call(yScaleAxis)
         .call(g => g.selectAll('.tick .grid-line').remove())
         .call(g =>
           g
@@ -36,7 +44,7 @@ const YScale = ({ chartRef, yScale, chartWidth, marginLeft }: IYScale) => {
             .attr('stroke-opacity', 0.1)
         );
     }
-  }, [chartRef, chartWidth, marginLeft, yScale]);
+  }, [chartRef, chartWidth, marginLeft, yScale, yAxisNumbersType]);
 
   return <g className="yScale" />;
 };

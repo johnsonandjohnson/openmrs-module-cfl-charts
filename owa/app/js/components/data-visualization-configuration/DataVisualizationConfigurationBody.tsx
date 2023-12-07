@@ -32,7 +32,9 @@ import {
   CHART_TYPE_OPTIONS,
   FILTER_BY_KEY,
   SELECT_ROLES_KEY,
-  SHOW_TABLE_UNDER_GRAPH
+  SHOW_TABLE_UNDER_GRAPH,
+  CHART_Y_AXIS_TYPE_KEY,
+  CHART_Y_AXIS_TYPE_OPTIONS
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
@@ -189,6 +191,8 @@ const DataVisualizationConfigurationBody = ({
           />
           {showValidationErrors && !getValue(CHART_X_AXIS_KEY) && <ValidationError message="common.error.required" />}
         </div>
+      </div>
+      <div className="inline-fields">
         <div className="input-container">
           <SelectWithPlaceholder
             placeholder={intl.formatMessage({ id: 'cflcharts.chart.yAxis' })}
@@ -203,6 +207,20 @@ const DataVisualizationConfigurationBody = ({
             isClearable
           />
           {showValidationErrors && !getValue(CHART_Y_AXIS_KEY) && <ValidationError message="common.error.required" />}
+        </div>
+        <div className="input-container">
+          <SelectWithPlaceholder
+            placeholder={intl.formatMessage({ id: 'cflcharts.chart.yAxisNumbersType' })}
+            showPlaceholder={!!getValue(CHART_Y_AXIS_TYPE_KEY)}
+            options={CHART_Y_AXIS_TYPE_OPTIONS}
+            value={getValue(CHART_Y_AXIS_TYPE_KEY)}
+            onChange={handleOptionOnChange}
+            theme={selectDefaultTheme}
+            name={CHART_Y_AXIS_TYPE_KEY}
+            wrapperClassName={cx({ invalid: showValidationErrors && !getValue(CHART_Y_AXIS_TYPE_KEY) })}
+            classNamePrefix="default-select"
+          />
+          {showValidationErrors && !getValue(CHART_Y_AXIS_TYPE_KEY) && <ValidationError message="common.error.required" />}
         </div>
       </div>
       <div className="inline-fields">
