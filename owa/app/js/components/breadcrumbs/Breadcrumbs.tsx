@@ -11,11 +11,13 @@ import React from 'react';
 import {FormattedMessage} from 'react-intl';
 import {createHashHistory} from 'history';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {ROOT_URL} from '../../shared/constants/openmrs';
+import {CONFIGURE_METADTA_PAGE_URL, ROOT_URL} from '../../shared/constants/openmrs';
 import {
   CONFIGURATION_URL_HASH,
   VISUALIZATION_URL_HASH
 } from '../../shared/constants/data-visualization-configuration';
+import './bread-crumb.scss';
+
 
 const Breadcrumb = () => {
   const {location: {pathname}} = createHashHistory();
@@ -38,11 +40,13 @@ const Breadcrumb = () => {
   const renderCrumbs = () => {
     switch (pathname) {
       case CONFIGURATION_URL_HASH:
-        return (
+        return <>
+          <a href={CONFIGURE_METADTA_PAGE_URL}><FormattedMessage id='adminui.app.configureMetadata.label' /></a>
+          {renderDelimiter()}
           <span className="breadcrumb-last-item">
             <FormattedMessage id="cflcharts.configuration"/>
           </span>
-        );
+        </>
       case VISUALIZATION_URL_HASH:
         return (
           <span className="breadcrumb-last-item">
