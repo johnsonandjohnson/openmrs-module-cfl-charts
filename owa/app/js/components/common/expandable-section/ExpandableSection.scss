@@ -48,4 +48,13 @@
       flex: 1;
     }
   }
+
+  .plusminusbutton > div {
+    justify-content: normal !important;
+    margin-top: 15px;
+  }
+
+  .filters-container {
+    margin-top: -15px;
+  }
 }

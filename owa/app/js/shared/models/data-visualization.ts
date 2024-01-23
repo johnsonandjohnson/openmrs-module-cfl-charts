@@ -8,6 +8,7 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
+import { FILTER_END_DATE_PROP_NAME, FILTER_FOCUSED_DATE_PICKER_PROP_NAME, FILTER_NAME_PROP_NAME, FILTER_START_DATE_PROP_NAME, FILTER_VALUE_PROP_NAME } from 'app/js/components/data-visualization/constant';
 import {
   CHART_COLORS_KEY,
   CHART_DESCRIPTION_KEY,
@@ -20,6 +21,7 @@ import {
   CHART_TYPE_KEY,
   CHART_X_AXIS_KEY,
   CHART_Y_AXIS_KEY,
+  FILTERS_KEY,
   FILTER_BY_KEY,
   SELECT_ROLES_KEY,
   SHOW_TABLE_UNDER_GRAPH,
@@ -62,6 +64,19 @@ export interface IReportList {
   reportData: IReportData[];
 }
 
+export interface IFilterConfiguration {
+  name: string,
+  label: string
+}
+
+export interface UIFilter {
+  [FILTER_NAME_PROP_NAME]: string;
+  [FILTER_VALUE_PROP_NAME]: string[];
+  [FILTER_START_DATE_PROP_NAME]?: string;
+  [FILTER_END_DATE_PROP_NAME]?: string;
+  [FILTER_FOCUSED_DATE_PICKER_PROP_NAME]?: string;
+}
+
 export interface IReportConfiguration {
   uuid: string;
   name: string;
@@ -80,6 +95,7 @@ export interface IReportConfiguration {
   [SELECT_ROLES_KEY]: string;
   [SHOW_TABLE_UNDER_GRAPH]: boolean;
   [CHART_Y_AXIS_TYPE_KEY]: string;
+  [FILTERS_KEY]: IFilterConfiguration[];
 }
 
 export interface IDataVisualizationConfigurationState {

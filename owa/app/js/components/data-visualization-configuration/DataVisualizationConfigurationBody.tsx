@@ -14,7 +14,7 @@ import cx from 'classnames';
 import { connect } from 'react-redux';
 import { difference } from 'lodash';
 import { updateReportsConfiguration, removeReport } from '../../reducers/data-visualization-configuration';
-import { ZERO } from '../../shared/constants/input';
+import { EMPTY_STRING, ZERO } from '../../shared/constants/input';
 import { SelectWithPlaceholder, InputWithPlaceholder, TextareaAutosizeWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
 import {
@@ -30,17 +30,18 @@ import {
   CHART_MARGIN_LEFT_KEY,
   CHART_COLORS_KEY,
   CHART_TYPE_OPTIONS,
-  FILTER_BY_KEY,
   SELECT_ROLES_KEY,
   SHOW_TABLE_UNDER_GRAPH,
   CHART_Y_AXIS_TYPE_KEY,
-  CHART_Y_AXIS_TYPE_OPTIONS
+  CHART_Y_AXIS_TYPE_OPTIONS,
+  FILTERS_KEY
 } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList } from '../../shared/models/data-visualization';
 import { IOption } from '../../shared/models/option';
 import ValidationError from '../common/form/ValidationError';
 import { Switch } from '../common/switch/Switch';
 import './DataVisualizationConfiguration.scss';
+import { PlusMinusButtons } from '../common/form/PlusMinusButton';
 
 interface IStore {
   reports: {
@@ -67,7 +68,7 @@ const DataVisualizationConfigurationBody = ({
   updateReportsConfiguration,
   intl
 }: PropsWithIntl<IDataVisualizationConfigurationBody>) => {
-  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, chartType } = reportConfig;
+  const { title, description, marginTop, marginBottom, marginRight, marginLeft, colors, xAxis, yAxis, legend, chartType, configFilters } = reportConfig;
 
   const getOptions = () => {
     const { columns = [] } = reportData || {};
@@ -77,11 +78,20 @@ const DataVisualizationConfigurationBody = ({
     return unusedOptions.map(option => ({ label: option, value: option }));
   };
 
-  const getAllOptions = () => {
+  const getFilterOptions = () => {
+    const unusedFilterOptions = getUnusedFilterOptions();
+    
+    return unusedFilterOptions.map(option => ({ label: option, value: option }));
+  };
+
+  const getUnusedFilterOptions = () => {
     const { columns = [] } = reportData || {};
 
-    return columns.map(option => ({ label: option, value: option }));
-  };
+    const usedFilters = !!configFilters ? configFilters : [{ fieldName: EMPTY_STRING, label: EMPTY_STRING }];
+    const usedFilterNames = usedFilters.map(option => option.name);
+    
+    return difference(columns, usedFilterNames);
+  }
 
   const getAllUserRoles = () => {
     return roles.map(option => ({ label: option.display, value: option.uuid }));
@@ -116,6 +126,50 @@ const DataVisualizationConfigurationBody = ({
     updateConfiguration(key, value);
   };
 
+  const handleFilterFieldOnChange = index => event => {
+    if (!reportConfig[FILTERS_KEY] || reportConfig[FILTERS_KEY].length === 0) {
+      reportConfig.configFilters = [{ name: EMPTY_STRING, label: EMPTY_STRING }];
+    }
+
+    reportConfig[FILTERS_KEY][index].name = event?.value;;
+    updateConfiguration(FILTERS_KEY, reportConfig[FILTERS_KEY]);
+    
+  };
+
+  const handleFilterByLabelOnChange = index => event => {
+    if (!reportConfig[FILTERS_KEY] || reportConfig[FILTERS_KEY].length === 0) {
+      reportConfig.configFilters = [{ name: EMPTY_STRING, label: EMPTY_STRING }];
+    }
+
+    reportConfig[FILTERS_KEY][index].label = event.target?.value;
+    updateConfiguration(FILTERS_KEY, reportConfig[FILTERS_KEY]);
+  };
+
+  const getFilterFieldValue = index => {
+    const reportFilter = reportConfig.configFilters ? reportConfig.configFilters[index] : null;
+    let result;
+
+    if (reportFilter?.name) {
+      result = { label:  reportFilter.name, value: reportFilter.name }
+    } else {
+      result =  null;
+    }
+
+    return result;
+  }
+
+  const getFilterLabelValue = index => {
+    const reportFilter = reportConfig.configFilters ? reportConfig.configFilters[index] : null;
+    let filterLabel;
+    if (reportFilter) {
+      filterLabel = reportFilter.label;
+    } else {
+      filterLabel = EMPTY_STRING;
+    }
+
+    return filterLabel;
+  }
+
   const handleInputOnChange = (event: ChangeEvent<HTMLInputElement>) => {
     const key = event?.target?.name;
     const eventValue = event?.target?.value;
@@ -125,7 +179,7 @@ const DataVisualizationConfigurationBody = ({
     updateConfiguration(key, value);
   };
 
-  const updateConfiguration = (key: string, value: string | number | boolean) => {
+  const updateConfiguration = (key: string, value: string | number | boolean | any) => {
     const updatedReportsConfiguration = reportsConfiguration.map(report =>
       report.uuid === reportConfig?.uuid
         ? {
@@ -141,10 +195,77 @@ const DataVisualizationConfigurationBody = ({
   const showTableUnderGraph = (key: string) => {
     return reportConfig[key];
   };
-
+  
   const handleShowDataSwitch = (capturedValue: boolean) => {
     updateConfiguration(SHOW_TABLE_UNDER_GRAPH, capturedValue);
   };
+
+  const addNewFilterBlock = () => {
+    const currentFilters = configFilters?.length > 0 ? configFilters : [{ name: EMPTY_STRING, label: EMPTY_STRING }];
+    currentFilters.push({ name: EMPTY_STRING, label: EMPTY_STRING });
+
+    updateConfiguration(FILTERS_KEY, currentFilters);
+  }
+
+  const removeFilterBlock = (index) => {
+    let updatedFilters;
+    if (configFilters.length === 1) {
+      updatedFilters = configFilters;
+      updatedFilters[index].fieldName = EMPTY_STRING;
+      updatedFilters[index].label = EMPTY_STRING;
+    } else {
+      updatedFilters = !!configFilters ? configFilters : [{ fieldName: EMPTY_STRING, label: EMPTY_STRING }];
+      updatedFilters.splice(index, 1);
+    }
+
+    updateConfiguration(FILTERS_KEY, updatedFilters);
+  }
+
+  const renderFilters = () => {
+    const { columns = [] } = reportData || {};
+    const filtersToRender = !configFilters || configFilters.length === 0 ? [{ fieldName: EMPTY_STRING, label: EMPTY_STRING }] : configFilters;
+    return (
+      <>
+        {filtersToRender.map((filter, index) => (
+          <div>
+            <div className="input-container">
+              <div className="inline-fields">
+                <div className="input-container">
+                  <SelectWithPlaceholder
+                    placeholder={intl.formatMessage({ id: 'cflcharts.chart.filterBy' })}
+                    showPlaceholder={!!getFilterFieldValue(index)}
+                    options={getFilterOptions()}
+                    onChange={handleFilterFieldOnChange(index)}
+                    value={getFilterFieldValue(index)}
+                    classNamePrefix="default-select"
+                    theme={selectDefaultTheme}
+                    isClearable            
+                  />
+                </div>
+                <div className="input-container">
+                  <InputWithPlaceholder
+                    placeholder={intl.formatMessage({ id: 'cflcharts.chart.filterLabel' })}
+                    showPlaceholder={!!getFilterLabelValue(index)}
+                    value={getFilterLabelValue(index)}
+                    type="text"
+                    onChange={handleFilterByLabelOnChange(index)}
+                  />
+                </div>
+                <div className="input-container plusminusbutton">
+                  <PlusMinusButtons
+                    intl={intl}
+                    onPlusClick={addNewFilterBlock}
+                    onMinusClick={() => removeFilterBlock(index)}
+                    isPlusButtonVisible={index === filtersToRender.length -1 && columns.length !== filtersToRender.length}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        ))} 
+      </>
+    );
+  }
 
   return (
     <>
@@ -311,18 +432,8 @@ const DataVisualizationConfigurationBody = ({
           />
           {showValidationErrors && !colors && <ValidationError message="common.error.required" />}
         </div>
-        <div className="input-container">
-          <SelectWithPlaceholder
-            placeholder={intl.formatMessage({ id: 'cflcharts.chart.filterBy' })}
-            showPlaceholder={!!getValue(FILTER_BY_KEY)}
-            options={getAllOptions()}
-            onChange={handleOptionOnChange}
-            value={getValue(FILTER_BY_KEY)}
-            name={FILTER_BY_KEY}
-            classNamePrefix="default-select"
-            theme={selectDefaultTheme}
-            isClearable
-          />
+        <div className="input-container filters-container">
+          {renderFilters()}
         </div>
       </div>
       <div className="inline-fields">

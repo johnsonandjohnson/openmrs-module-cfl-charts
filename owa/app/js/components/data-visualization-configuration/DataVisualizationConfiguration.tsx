@@ -100,6 +100,12 @@ const DataVisualizationConfiguration = ({
           showValidationErrors = true;
         }
       });
+
+      if (report.configFilters?.length > 0) {
+        report.configFilters = report.configFilters.filter(filter => !!filter.name && !!filter.label);
+      } else {
+        report.configFilters = [{ name: EMPTY_STRING, label: EMPTY_STRING }]
+      }
     });
 
     setShowValidationErrors(showValidationErrors);

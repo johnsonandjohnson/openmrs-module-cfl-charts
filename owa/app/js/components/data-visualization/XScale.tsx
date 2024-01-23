@@ -36,7 +36,7 @@ const XScale = ({ chartRef, xScale, chartHeight, chartType, data = [] }: IXScale
         );
       } else {
         //@ts-ignore
-        xScaleSelection.call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%d-%m-%Y')));
+        xScaleSelection.call(d3.axisBottom(xScale).tickFormat(d3.timeFormat('%d %b %Y')));
       }
 
       xScaleSelection

@@ -20,12 +20,19 @@ import Lines from './Lines';
 import { Button, Spinner } from 'reactstrap';
 import { FormattedMessage } from 'react-intl';
 import { HOME_PAGE_URL } from '../../shared/constants/data-visualization-configuration';
-import { IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
+import { UIFilter, IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import ChartDescription from './ChartDescription';
 import ChartTitle from './ChartTitle';
 import ExportChartDataButton from './ExportChartDataButton';
 import { Switch } from '../common/switch/Switch';
 import '../data-visualization-configuration/DataVisualizationConfiguration.scss';
+import { selectDefaultTheme } from '../../shared/util/form-util';
+import { DateRangePicker } from 'react-dates';
+import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
+import { IOption } from '../../shared/models/option';
+import { DATE_FORMAT, MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH } from './constant';
+import { convertDateToString, getDefaultFilters, sortInNaturalOrder } from './CommonChartFunctions';
+import _ from 'lodash';
 
 interface ILineChart {
   chartIdx: number;
@@ -36,7 +43,7 @@ interface ILineChart {
 
 const LineChart = ({
   report,
-  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph, yAxisNumbersType },
+  config: { xAxis, yAxis, legend, description, chartType, colors, marginTop, marginBottom, marginLeft, marginRight, title, showTableUnderGraph, yAxisNumbersType, configFilters },
   isActive,
   intl
 }: PropsWithIntl<ILineChart>) => {
@@ -49,6 +56,8 @@ const LineChart = ({
   const [chartWidth, setChartWidth] = useState<number>(0);
   const [chartHeight, setChartHeight] = useState<number>(0);
   const [showTable, setShowTable] = useState<boolean>(false);
+  const [allAvailableFilters, setAllAvailableFilters] = useState<UIFilter[]>([]);
+  const [currentlySelectedFilters, setCurrentlySelectedFilters] = useState<UIFilter[]>([]);
 
   useEffect(() => {
     if (report?.length) {
@@ -57,8 +66,18 @@ const LineChart = ({
 
       setLegendTypes(legendTypes);
       setFilterByLegend(legendTypes);
+
+      if (allAvailableFilters.length == 0) {
+        setAllAvailableFilters(getDefaultFilters(configFilters, report));
+      }
     }
   }, [legend, report]);
+
+  useEffect(() => {
+    if (report?.length) {
+      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+    }
+  }, [report]);
 
   useEffect(() => {
     if (dataToDisplay?.length && isActive) {
@@ -85,42 +104,199 @@ const LineChart = ({
 
   const { groupedByLegend, yScale, xScale, colorsScaleOrdinal, groupedAndSummedDataByXAxis, groupedAndSummedDataByLegend } = controller;
 
-  const handleLegendClick = (value: string) => {
-    let filteredLegend = [...filterByLegend];
-    let filteredClonedDataToDisplay = dataToDisplay.filter(data => `${data[legend]}` !== value);
+  const handleOnChange = (options: IOption[], filter) => {
+    const currentlySelectedOptions = options.map(({ value }) => value);
 
-    if (filteredLegend.includes(value)) {
-      filteredLegend = filteredLegend.filter(data => data !== value);
+    prepareFiltersAndFilterData(currentlySelectedOptions, filter.name);
+  };
+
+  const prepareFiltersAndFilterData = (selectedOptions: string[], filterName: string) => {
+    const updatedFilters = getUpdatedFilters(selectedOptions, filterName);
+    setCurrentlySelectedFilters(updatedFilters);
+    filterData(updatedFilters);
+  };
+
+  const getUpdatedFilters = (selectedOptions: string[], filterName: string) => {
+    let clonedDataToDisplay = !selectedOptions.length ? report : report.filter(data => selectedOptions.includes(data[filterName]));
+
+    let updatedFilters = _.cloneDeep(currentlySelectedFilters);
+    if (!selectedOptions?.length) {
+      updatedFilters = getDefaultFilters(configFilters, report);
     } else {
-      filteredClonedDataToDisplay = [...dataToDisplay, ...report.filter(data => `${data[legend]}` === value)];
-      filteredLegend.push(value);
+      updatedFilters.forEach(filter => {
+        if (filter.name === filterName) {
+          filter.value = selectedOptions;
+        } else {
+          const filterValues = filter.value;
+          const availableValues = [...new Set(clonedDataToDisplay.map(item => item[filter.name]))];
+          const filteredValues = filterValues.filter(value => availableValues.includes(value));
+          filter.value = filteredValues;
+        }
+      });
     }
 
-    if (!filteredLegend.length) {
-      filteredLegend = legendTypes;
-      filteredClonedDataToDisplay = report;
+    return updatedFilters;
+  }
+
+  const filterData = currentFilters => {
+    let clonedDataToDisplay = _.cloneDeep(report);
+    currentFilters.forEach(currentFilter => {
+      clonedDataToDisplay = clonedDataToDisplay.filter(data => currentFilter.value.includes(data[currentFilter.name]));
+    });
+
+    const currentLegendTyes = currentFilters.find(currentFilter => currentFilter.name === legend)?.value as string[];
+
+    setDataToDisplay(clonedDataToDisplay);
+    setFilterByLegend(currentLegendTyes);
+  }
+
+  const handleLegendClick = (value: string) => {
+    let clonedFilterByLegend = [...filterByLegend];
+
+    if (clonedFilterByLegend.includes(value)) {
+      clonedFilterByLegend = clonedFilterByLegend.filter(legend => legend !== value);
+    } else {
+      clonedFilterByLegend.push(value);
     }
 
-    setDataToDisplay(filteredClonedDataToDisplay);
-    setFilterByLegend(filteredLegend.sort());
+    prepareFiltersAndFilterData(clonedFilterByLegend, legend);
+
+    if (!clonedFilterByLegend.length) {
+      clonedFilterByLegend = legendTypes;
+    }
+    
+    setFilterByLegend(clonedFilterByLegend.sort());
   };
 
   const handleShowTableSwitchOnChange = () => {
     setShowTable(() => !showTable)
   };
 
+  const handleDatePickerFocusChange = (focusedInput, filterName) => {
+    const updatedFilters = [...currentlySelectedFilters];
+    const foundElement = updatedFilters.find(filter => filter.name === filterName);
+    if (foundElement) {
+      foundElement.focusedDatePicker = focusedInput;
+      setCurrentlySelectedFilters(updatedFilters);
+    }
+  }
+  
+  const handleDatesOnChange = (startDate, endDate, filterName) => {
+    const updatedFilters = [...currentlySelectedFilters];
+    const foundElement = updatedFilters.find(filter => filter.name === filterName);
+    if (foundElement) {
+      foundElement.startDate = startDate;
+      foundElement.endDate = endDate;
+      setCurrentlySelectedFilters(updatedFilters);
+
+      const startDateAsString = convertDateToString(startDate);
+      const endDateAsString = convertDateToString(endDate);
+
+      const originalDates = allAvailableFilters.find(filter => filter.name === filterName);
+      const filteredDates = originalDates?.value.filter(date => date >= startDateAsString && date <= endDateAsString) || [];
+
+      prepareFiltersAndFilterData(filteredDates, filterName);
+    }
+  }
+
+  const renderFilters = () => {
+    return (
+      <>
+        {configFilters.map(configFilter => {
+          const filterName = configFilter.name;
+          const filterField = currentlySelectedFilters.find(filter => filter.name === filterName);
+          const startDate = filterField?.startDate;
+          const endDate = filterField?.endDate;
+          
+          if (startDate !== undefined) {
+            return (
+              <>
+                <div className='input-container'>
+                  <DateRangePicker 
+                    placeholder={configFilter.label}
+                    startDate={startDate}
+                    startDatePlaceholderText={configFilter.label}
+                    endDate={endDate}
+                    endDatePlaceholderText={configFilter.label}
+                    onDatesChange={({ startDate, endDate }) => handleDatesOnChange(startDate, endDate, filterName)}
+                    focusedInput={filterField?.focusedDatePicker}
+                    onFocusChange={focusedInput => handleDatePickerFocusChange(focusedInput, filterName)}
+                    showClearDates={true}
+                    displayFormat={DATE_FORMAT}
+                    hideKeyboardShortcutsPanel
+                    isOutsideRange={() => false}
+                    showDefaultInputIcon
+                    orientation={window.screen.availWidth > MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH ? "horizontal" : "vertical"}
+                    small={window.screen.availWidth < MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH}
+                    disabled={false}
+                    minimumNights={0}
+                  />
+                  {<span className="placeholder input-placeholder">{configFilter.label || ''}</span>}
+                </div>
+              </>
+            );
+          } else {
+            const allOptions = allAvailableFilters.find(filter => filter.name === filterName)?.value || [];
+            const sortedAllOptions = allOptions.map(filterOption => ({ label: filterOption, value: filterOption })).sort(sortInNaturalOrder);
+
+            const currentOptions = currentlySelectedFilters.find(filter => filter.name === filterName)?.value || [];
+            const sortedCurrentOptions = currentOptions.map(filterOption => ({ label: filterOption, value: filterOption })).sort(sortInNaturalOrder);
+
+            return sortedAllOptions.length > 0 && (
+              <SelectWithPlaceholder
+                name={filterName}
+                placeholder={configFilter.label}
+                showPlaceholder={!!allOptions.length}
+                options={sortedAllOptions}
+                value={sortedCurrentOptions}
+                onChange={handleOnChange}
+                defaultValue={sortedAllOptions}
+                isMulti
+                classNamePrefix="default-select"
+                theme={selectDefaultTheme}
+              />
+            );
+          }
+        })}
+      </>
+    );
+  }
+
   return (
-    <>
+    <div className="chart">
       {!legendTypes.length && !chartWidth ? (
         <div className="spinner">
           <Spinner />
         </div>
       ) : (
-        <div className="chart">
-          <svg width={chartWidth + marginLeft + marginRight} height={chartHeight + marginTop + marginBottom} ref={chartRef}>
-            <ChartTitle chartRef={chartRefCurrent} chartWidth={chartWidth} marginTop={marginTop} title={title} />
-            <YScale chartRef={chartRefCurrent} yScale={yScale} chartWidth={chartWidth} marginLeft={marginLeft} yAxisNumbersType={yAxisNumbersType} />
-            <XScale chartRef={chartRefCurrent} xScale={xScale} chartHeight={chartHeight} chartType={chartType} />
+        <>          
+          <div className='filters-section'>
+            {renderFilters()}
+          </div>
+          <svg 
+            width={chartWidth + marginLeft + marginRight} 
+            height={chartHeight + marginTop + marginBottom} 
+            ref={chartRef}
+          >
+            <ChartTitle 
+              chartRef={chartRefCurrent} 
+              chartWidth={chartWidth} 
+              marginTop={marginTop} 
+              title={title} 
+            />
+            <YScale  
+              chartRef={chartRefCurrent} 
+              yScale={yScale} 
+              chartWidth={chartWidth} 
+              marginLeft={marginLeft} 
+              yAxisNumbersType={yAxisNumbersType} 
+            />
+            <XScale 
+              chartRef={chartRefCurrent} 
+              xScale={xScale} 
+              chartHeight={chartHeight} 
+              chartType={chartType} 
+            />
             <ChartLegend
               legendTypes={legendTypes}
               filterByLegend={filterByLegend}
@@ -176,9 +352,9 @@ const LineChart = ({
               xAxis={xAxis}
             />
           </div>
-        </div>
+        </>
       )}
-    </>
+   </div>
   );
 };
 

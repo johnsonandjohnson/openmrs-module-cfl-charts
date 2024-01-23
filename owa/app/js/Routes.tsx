@@ -13,8 +13,10 @@ import Customize from './components/customize/customize'
 import DataVisualization from './components/data-visualization/DataVisialization';
 import DataVisualizationConfiguration from './components/data-visualization-configuration/DataVisualizationConfiguration';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
-import { Header, LocalizedMessage } from '@openmrs/react-components';
+import { Header } from '@openmrs/react-components';
 import Breadcrumbs from './components/breadcrumbs/Breadcrumbs';
+import "react-dates/initialize";
+import "react-dates/lib/css/_datepicker.css";
 
 const Routes = () => (
   <>
