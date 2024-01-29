@@ -51,6 +51,11 @@ export const convertDateToString = date => {
   return stringDate;
 }
 
+export const isDateFilter = filter => {
+  const startDateField = filter.startDate;
+  return startDateField !== undefined;
+}
+
 const isDateValue = (value) => {
   return moment(value, DATE_FORMAT, true).isValid();
 }

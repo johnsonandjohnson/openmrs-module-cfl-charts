@@ -30,8 +30,9 @@ import SummaryChartTable from './SummaryChartTable';
 import { Switch } from '../common/switch/Switch';
 import { DateRangePicker } from 'react-dates';
 import { DATE_FORMAT, MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH } from './constant';
-import { convertDateToString, getDefaultFilters, sortInNaturalOrder } from './CommonChartFunctions';
+import { getDefaultFilters, isDateFilter, sortInNaturalOrder } from './CommonChartFunctions';
 import _ from 'lodash';
+import moment from 'moment';
 
 interface IBarChart {
   isActive: boolean;
@@ -75,6 +76,9 @@ const BarChart = ({
       }
 
       if (legendTypes?.length && xAxsisTypes.length && !dataToDisplay?.length) {
+        setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+        const types = [...new Set(report.map(data => `${data[legend]}`))].sort() as string[];
+        setFilterByLegend(types);
         setDataToDisplay(report);
       }
 
@@ -129,20 +133,25 @@ const BarChart = ({
   };
 
   const getUpdatedFilters = (selectedOptions: string[], filterName: string) => {
-    let clonedDataToDisplay = !selectedOptions.length ? report : report.filter(data => selectedOptions.includes(data[filterName]));
+    const filterValues = !selectedOptions.length ? allAvailableFilters.find(availableFilter => availableFilter.name === filterName)?.value : selectedOptions;
+    let clonedDataToDisplay = report.filter(data => filterValues?.includes(data[filterName]));
+    let updatedFilters = [...currentlySelectedFilters];
 
-    let updatedFilters = _.cloneDeep(currentlySelectedFilters);
     if (!selectedOptions?.length) {
-      updatedFilters = getDefaultFilters(configFilters, report);
+      updatedFilters = updatedFilters.map(filter => 
+        filter.name === filterName ? {...filter, value: filterValues} : filter
+      ) as UIFilter[];
     } else {
       updatedFilters.forEach(filter => {
         if (filter.name === filterName) {
           filter.value = selectedOptions;
         } else {
-          const filterValues = filter.value;
-          const availableValues = [...new Set(clonedDataToDisplay.map(item => item[filter.name]))];
-          const filteredValues = filterValues.filter(value => availableValues.includes(value));
-          filter.value = filteredValues;
+          if (!isDateFilter(filter)) {
+            const filterValues = filter.value;
+            const availableValues = [...new Set(clonedDataToDisplay.map(item => item[filter.name]))];
+            const filteredValues = filterValues.filter(value => availableValues.includes(value));
+            filter.value = filteredValues;
+          }
         }
       });
     }
@@ -200,28 +209,30 @@ const BarChart = ({
     if (foundElement) {
       foundElement.startDate = startDate;
       foundElement.endDate = endDate;
-      setCurrentlySelectedFilters(updatedFilters);
 
-      const startDateAsString = convertDateToString(startDate);
-      const endDateAsString = convertDateToString(endDate);
+      const originalStringDates = allAvailableFilters.find(filter => filter.name === filterName)?.value;
+      const originalDatesAsDateObjects = originalStringDates?.map(dateString => moment(dateString, DATE_FORMAT));
 
-      const originalDates = allAvailableFilters.find(filter => filter.name === filterName);
-      const filteredDates = originalDates?.value.filter(date => date >= startDateAsString && date <= endDateAsString) || [];
+      const filteredDateObjects = originalDatesAsDateObjects?.filter(date => date.isBetween(moment(startDate, DATE_FORMAT).startOf('day'), moment(endDate, DATE_FORMAT).endOf('day'), null, '[]'));
+      const filteredDates = filteredDateObjects?.map(date => date.format(DATE_FORMAT)) as string[];
+
+      foundElement.value = filteredDates;
 
       prepareFiltersAndFilterData(filteredDates, filterName);
     }
   }
 
   const renderFilters = () => {
+    const filteredConfigFilters = configFilters.filter(filter => filter.label !== '' || filter.name !== '');
     return (
       <>
-        {configFilters.map(configFilter => {
+        {filteredConfigFilters.map(configFilter => {
           const filterName = configFilter.name;
           const filterField = currentlySelectedFilters.find(filter => filter.name === filterName);
           const startDate = filterField?.startDate;
           const endDate = filterField?.endDate;
 
-          if (startDate !== undefined) {
+          if (isDateFilter(filterField)) {
             return (
               <>
                 <div className='input-container'>
