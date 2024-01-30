@@ -9,7 +9,6 @@
 
 import React from 'react'
 import LandingPage from './components/LandingPage';
-import Customize from './components/customize/customize'
 import DataVisualization from './components/data-visualization/DataVisialization';
 import DataVisualizationConfiguration from './components/data-visualization-configuration/DataVisualizationConfiguration';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
@@ -20,7 +19,6 @@ import "react-dates/lib/css/_datepicker.css";
 
 const Routes = () => (
   <>
-    <Customize />
     <Header />
     <Breadcrumbs />
     <div className="body-wrapper">
