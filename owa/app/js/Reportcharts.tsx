@@ -25,19 +25,21 @@ import '../css/Inputs.scss';
 import '../css/Reportcharts.scss';
 import 'babel-polyfill';
 import TranslationProvider from "./components/translation/translation-provider";
+import Customize from './components/customize/customize';
 
 loadIcons();
 toast.configure();
 const store = initStore();
 
 render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <>
+        <Customize />
         <TranslationProvider>
           {Routes()}
         </TranslationProvider>
-      </ConnectedRouter>
-    </Provider>
-  </React.StrictMode>
-  , document.getElementById('app'));
+      </>
+    </ConnectedRouter>
+  </Provider>
+, document.getElementById('app'));
