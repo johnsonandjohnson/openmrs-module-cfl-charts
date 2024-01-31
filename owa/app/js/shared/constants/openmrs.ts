@@ -14,3 +14,4 @@ export const PURGE_TRUE_FLAG = 'purge=true';
 export const PATIENT_PAGE_URL = `${ROOT_URL}coreapps/clinicianfacing/patient.page`;
 export const CONDITIONS_PAGE_URL = `${ROOT_URL}coreapps/conditionlist/manageConditions.page`;
 export const CONFIGURE_METADTA_PAGE_URL = `${ROOT_URL}adminui/metadata/configureMetadata.page`;
+export const SYSTEM_ADMINISTRATION_PAGE_URL = `${ROOT_URL}coreapps/systemadministration/systemAdministration.page`;
