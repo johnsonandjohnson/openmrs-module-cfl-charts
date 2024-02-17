@@ -10,7 +10,7 @@
 
   <groupId>org.openmrs.module</groupId>
   <artifactId>cflcharts</artifactId>
-  <version>1.2.2-SNAPSHOT</version>
+  <version>1.2.2-leprosy-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Report Charts module</name>
   <description>
