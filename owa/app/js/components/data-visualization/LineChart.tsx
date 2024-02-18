@@ -69,20 +69,20 @@ const LineChart = ({
       setFilterByLegend(legendTypes);
 
       if (allAvailableFilters.length == 0) {
-        setAllAvailableFilters(getDefaultFilters(configFilters, report));
+        setAllAvailableFilters(getDefaultFilters(configFilters, report, legend));
       }
     }
   }, [legend, report]);
 
   useEffect(() => {
     if (report?.length) {
-      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report, legend));
     }
   }, [report]);
 
   useEffect(() => {
     if (report?.length && !dataToDisplay?.length) {
-      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report, legend));
       const types = [...new Set(report.map(data => `${data[legend]}`))].sort() as string[];
       setFilterByLegend(types);
       setDataToDisplay(report);

@@ -76,21 +76,21 @@ const BarChart = ({
       }
 
       if (legendTypes?.length && xAxsisTypes.length && !dataToDisplay?.length) {
-        setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+        setCurrentlySelectedFilters(getDefaultFilters(configFilters, report, legend));
         const types = [...new Set(report.map(data => `${data[legend]}`))].sort() as string[];
         setFilterByLegend(types);
         setDataToDisplay(report);
       }
 
       if (allAvailableFilters.length == 0) {
-        setAllAvailableFilters(getDefaultFilters(configFilters, report));
+        setAllAvailableFilters(getDefaultFilters(configFilters, report, legend));
       }
     }
   }, [legendTypes, xAxsisTypes, report, legend, xAxis, dataToDisplay?.length, configFilters]);
 
   useEffect(() => {
     if (report?.length) {
-      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report));
+      setCurrentlySelectedFilters(getDefaultFilters(configFilters, report, legend));
     }
   }, [report]);
 

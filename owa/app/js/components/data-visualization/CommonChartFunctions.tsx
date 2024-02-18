@@ -12,7 +12,7 @@ import { UIFilter } from "app/js/shared/models/data-visualization";
 import { DATE_FORMAT } from "./constant";
 import moment from 'moment';
 
-export const getDefaultFilters = (configFilters, report) => {
+export const getDefaultFilters = (configFilters, report, legend) => {
   const filterFieldsToSet = [] as any;
   configFilters.forEach(filter => {
     const filterName = filter.name;
@@ -30,6 +30,15 @@ export const getDefaultFilters = (configFilters, report) => {
 
     filterFieldsToSet.push(filterDataObject);
   });
+
+  const legendFilter = filterFieldsToSet.find(filter => filter.name === legend);
+  if (!legendFilter) {
+    const legendFilterField = {
+      name: legend,
+      value: [...new Set(report.map(data => data[legend]))].sort()
+    }
+    filterFieldsToSet.push(legendFilterField);
+  }
 
   return filterFieldsToSet;
 }

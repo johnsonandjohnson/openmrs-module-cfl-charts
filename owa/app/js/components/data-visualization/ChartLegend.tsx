@@ -61,8 +61,8 @@ const ChartLegend = ({
 
   return (
     <g className="legends">
-      {legendTypes.map(legend => (
-        <g className={cx('legend', { active: filterByLegend.includes(legend) })} key={legend} onClick={() => handleLegendClick(legend)}>
+      {legendTypes?.map(legend => (
+        <g className={cx('legend', { active: filterByLegend?.includes(legend) })} key={legend} onClick={() => handleLegendClick(legend)}>
           <rect className="rect-legend" />
           <text className="text-legend" />
         </g>
