@@ -10,7 +10,7 @@
 
 import React, { useEffect } from 'react';
 import * as d3 from 'd3';
-import { Y_AXIS_INTEGER_NUMBERS_KEY } from '../../shared/constants/data-visualization-configuration';
+import { Y_AXIS_INTEGER_NUMBERS_KEY, Y_AXIS_PERCENTAGE_NUMBERS_KEY } from '../../shared/constants/data-visualization-configuration';
 
 interface IYScale {
   chartRef: SVGSVGElement | null;
@@ -27,6 +27,9 @@ const YScale = ({ chartRef, yScale, chartWidth, marginLeft, yAxisNumbersType }: 
 
       if (yAxisNumbersType === Y_AXIS_INTEGER_NUMBERS_KEY) {
         yScaleAxis.tickValues(yScale.ticks().filter(tick => Number.isInteger(tick)));
+      } else if (yAxisNumbersType === Y_AXIS_PERCENTAGE_NUMBERS_KEY) {
+        yScale.domain([0,100]);
+        yScaleAxis.tickFormat((tick: number) => `${tick}%`);
       }
 
       d3.select(chartRef)

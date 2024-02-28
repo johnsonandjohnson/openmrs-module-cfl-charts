@@ -42,9 +42,11 @@ export const SHOW_TABLE_UNDER_GRAPH = 'showTableUnderGraph';
 export const CHART_Y_AXIS_TYPE_KEY = 'yAxisNumbersType';
 export const Y_AXIS_INTEGER_NUMBERS_KEY = 'Integer numbers type';
 export const Y_AXIS_DECIMAL_NUMBERS_KEY = 'Decimal numbers type';
+export const Y_AXIS_PERCENTAGE_NUMBERS_KEY = 'Percentage numbers type';
 export const CHART_Y_AXIS_TYPE_OPTIONS = [
   { label: Y_AXIS_INTEGER_NUMBERS_KEY, value: Y_AXIS_INTEGER_NUMBERS_KEY },
-  { label: Y_AXIS_DECIMAL_NUMBERS_KEY, value: Y_AXIS_DECIMAL_NUMBERS_KEY }
+  { label: Y_AXIS_DECIMAL_NUMBERS_KEY, value: Y_AXIS_DECIMAL_NUMBERS_KEY },
+  { label: Y_AXIS_PERCENTAGE_NUMBERS_KEY, value: Y_AXIS_PERCENTAGE_NUMBERS_KEY }
 ];
 export const FILTERS_KEY = 'configFilters';
 
