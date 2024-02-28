@@ -10,7 +10,7 @@
 
   <groupId>org.openmrs.module</groupId>
   <artifactId>cflcharts</artifactId>
-  <version>1.2.2-leprosy-SNAPSHOT</version>
+  <version>1.2.2-leprosy-india</version>
   <packaging>pom</packaging>
   <name>Report Charts module</name>
   <description>
@@ -22,7 +22,7 @@
     <connection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-cfl-charts.git</connection>
     <developerConnection>scm:git:https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-cfl-charts.git</developerConnection>
     <url>https://sourcecode.jnj.com/scm/itx-bpv/openmrs-module-cfl-charts.git</url>
-    <tag>HEAD</tag>
+    <tag>1.2.2-leprosy-india</tag>
   </scm>
 
   <modules>

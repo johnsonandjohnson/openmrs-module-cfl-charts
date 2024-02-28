@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.openmrs.module</groupId>
     <artifactId>cflcharts</artifactId>
-    <version>1.2.2-leprosy-SNAPSHOT</version>
+    <version>1.2.2-leprosy-india</version>
   </parent>
 
   <artifactId>cflcharts-api</artifactId>
