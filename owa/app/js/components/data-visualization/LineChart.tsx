@@ -34,6 +34,7 @@ import { DATE_FORMAT, MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH } from './constant'
 import { getDefaultFilters, isDateFilter, sortInNaturalOrder } from './CommonChartFunctions';
 import _ from 'lodash';
 import moment from 'moment';
+import VisualizationInformationMessage from '../common/data-visualization/VisualizationInformationMessage';
 
 interface ILineChart {
   chartIdx: number;
@@ -282,10 +283,8 @@ const LineChart = ({
 
   return (
     <div className="chart">
-      {!legendTypes.length && !chartWidth ? (
-        <div className="spinner">
-          <Spinner />
-        </div>
+      {!dataToDisplay.length ? (
+        <VisualizationInformationMessage message="cflcharts.visualization.noData" />
       ) : (
         <>          
           <div className='filters-section'>

@@ -21,6 +21,7 @@ import { getSession } from '../../reducers/session'
 import { LINE_CHART, REPORTS_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
 import { initialUpdateReportsConfiguration, getReports } from '../../reducers/data-visualization-configuration';
+import VisualizationInformationMessage from '../common/data-visualization/VisualizationInformationMessage';
 
 interface IStore {
   settings: ISettingsState;
@@ -102,11 +103,13 @@ const DataVisualization = ({
     <div className="data-visualization">
       <FormattedMessage id="cflcharts.visualization" tagName="h1" />
       {errorMessage ? (
-        <div className="error">{errorMessage}</div>
-      ) : loading && !reportsList.length ? (
+        <VisualizationInformationMessage message="cflcharts.visualization.sqlError" />
+      ) : loading ? (
         <div className="spinner">
           <Spinner />
         </div>
+      ) : reportsList.length === 0 || authorizedReportConfigs.length === 0 ? (
+        <VisualizationInformationMessage message="cflcharts.visualization.noPermission" />
       ) : (
         <>
           <Nav tabs>{navItems}</Nav>

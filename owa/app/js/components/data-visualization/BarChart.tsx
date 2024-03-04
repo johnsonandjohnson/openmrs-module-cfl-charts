@@ -33,6 +33,7 @@ import { DATE_FORMAT, MIN_HORIZONTAL_DATE_RANGE_PICKER_WIDTH } from './constant'
 import { getDefaultFilters, isDateFilter, sortInNaturalOrder } from './CommonChartFunctions';
 import _ from 'lodash';
 import moment from 'moment';
+import VisualizationInformationMessage from '../common/data-visualization/VisualizationInformationMessage';
 
 interface IBarChart {
   isActive: boolean;
@@ -288,10 +289,8 @@ const BarChart = ({
 
   return (
     <div className="chart">
-      {!xAxsisTypes.length && !chartWidth ? (
-        <div className="spinner">
-          <Spinner />
-        </div>
+      {!dataToDisplay.length ? (
+        <VisualizationInformationMessage message="cflcharts.visualization.noData" />
       ) : (
         <>
           <div className='filters-section'>
