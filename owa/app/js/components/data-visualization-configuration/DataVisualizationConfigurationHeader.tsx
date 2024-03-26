@@ -15,7 +15,7 @@ import cx from 'classnames';
 import { connect } from 'react-redux';
 import { SelectWithPlaceholder } from '../common/form/withPlaceholder';
 import { selectDefaultTheme } from '../../shared/util/form-util';
-import { differenceBy } from 'lodash';
+import { cloneDeep, differenceBy } from 'lodash';
 import { updateReportsConfiguration, removeReport } from '../../reducers/data-visualization-configuration';
 import { DEFAULT_REPORT_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
 import { IReportConfiguration, IReportList, IReportsOptions } from '../../shared/models/data-visualization';
@@ -30,10 +30,12 @@ interface IStore {
 
 interface IDataVisualizationConfigurationHeader extends StateProps, DispatchProps {
   reportConfig: IReportConfiguration;
+  reportIdx: number;
 }
 
 const DataVisualizationConfigurationHeader = ({
   reportConfig,
+  reportIdx,
   reportsList,
   reportsConfiguration,
   showValidationErrors,
@@ -59,20 +61,51 @@ const DataVisualizationConfigurationHeader = ({
     updateReportsConfiguration(updatedReportsConfiguration);
   };
 
+  const onSwapPositionsHandler = (offset: number) => {
+    const clonedReportsConfiguration = cloneDeep(reportsConfiguration);
+    const swappedReportsPosition = swapPositions(clonedReportsConfiguration, reportIdx, offset);
+
+    updateReportsConfiguration(swappedReportsPosition);
+  };
+
+  const swapPositions = (array, idx, offset) => {
+    const targetIdx = idx + offset;
+    if (targetIdx >= 0 && targetIdx < array.length) {
+      [array[idx], array[targetIdx]] = [array[targetIdx], array[idx]];
+    }
+    return array;
+  };
+
   return (
-    <div className="input-container">
-      <SelectWithPlaceholder
-        showPlaceholder={!!reportConfig.uuid}
-        placeholder={intl.formatMessage({ id: 'cflcharts.report' })}
-        options={reportsOptions}
-        onChange={handleReportOnChange}
-        theme={selectDefaultTheme}
-        wrapperClassName={cx({ invalid: showValidationErrors && !reportConfig.uuid })}
-        classNamePrefix="default-select"
-        value={reportConfig.uuid ? { label: reportConfig.name, value: reportConfig.uuid } : null}
-      />
-      {showValidationErrors && !reportConfig.uuid && <ValidationError message="common.error.required" />}
-    </div>
+    <>
+      <div className="d-flex flex-column order-icons">
+        <span
+          className={cx('glyphicon glyphicon-chevron-up', { disabled: !reportIdx })}
+          title={intl.formatMessage({ id: 'common.moveUp' })}
+          aria-hidden="true"
+          onClick={() => onSwapPositionsHandler(-1)}
+        />
+        <span
+          className={cx('glyphicon glyphicon-chevron-down', { disabled: reportIdx === reportsConfiguration.length - 1 })}
+          title={intl.formatMessage({ id: 'common.moveDown' })}
+          aria-hidden="true"
+          onClick={() => onSwapPositionsHandler(1)}
+        />
+      </div>
+      <div className="input-container">
+        <SelectWithPlaceholder
+          showPlaceholder={!!reportConfig.uuid}
+          placeholder={intl.formatMessage({ id: 'cflcharts.report' })}
+          options={reportsOptions}
+          onChange={handleReportOnChange}
+          theme={selectDefaultTheme}
+          wrapperClassName={cx({ invalid: showValidationErrors && !reportConfig.uuid })}
+          classNamePrefix="default-select"
+          value={reportConfig.uuid ? { label: reportConfig.name, value: reportConfig.uuid } : null}
+        />
+        {showValidationErrors && !reportConfig.uuid && <ValidationError message="common.error.required" />}
+      </div>
+    </>
   );
 };
 
