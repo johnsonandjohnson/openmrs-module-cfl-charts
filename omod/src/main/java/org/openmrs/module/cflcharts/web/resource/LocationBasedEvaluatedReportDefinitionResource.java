@@ -65,15 +65,13 @@ public class LocationBasedEvaluatedReportDefinitionResource extends LocationBase
 
   @Override
   protected PageableResult doGetAll(RequestContext context) throws ResponseException {
-
     List<Object> allResults = new ArrayList<>();
     ReportDefinitionService reportDefinitionService = Context.getService(ReportDefinitionService.class);
     List<ReportDefinition> reportDefinitions = reportDefinitionService.getAllDefinitions(false);
 
     for (ReportDefinition reportDefinition : reportDefinitions) {
       try {
-        Object result = retrieve(reportDefinition.getUuid(), context);
-        allResults.add(result);
+        allResults.add(retrieve(reportDefinition.getUuid(), context));
       } catch (ResponseException e) {
         throw new APIException("Failed to evaluate report definition", e);
       }

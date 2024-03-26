@@ -66,7 +66,7 @@ const reducer = (state = initialState, action: AnyAction) => {
         loading: false
       };
     }
-    case SUCCESS(ACTION_TYPES.GET_REPORTS):{
+    case SUCCESS(ACTION_TYPES.GET_REPORTS): {
       const reportsList = action.payload.map(
         ({
           data: {
@@ -74,7 +74,7 @@ const reducer = (state = initialState, action: AnyAction) => {
             definition: { name, description },
             uuid
           }  
-        }: any) => {
+        }: IGetReportsActionPayload) => {
           const [report] = dataSets;
           const {
             metadata: { columns },
