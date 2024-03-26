@@ -14,7 +14,7 @@ import DataVisualizationConfigurationBlock from './DataVisualizationConfiguratio
 import { connect } from 'react-redux';
 import { FormattedMessage } from 'react-intl';
 import { Button, Spinner } from 'reactstrap';
-import { getSettingByQuery, getSettings, createSetting, updateSetting } from '../../reducers/setttings';
+import { getSettingByQuery, createSetting, updateSetting } from '../../reducers/setttings';
 import { getRoles } from '../../reducers/role';
 import {
   getReportMetadata,
@@ -23,7 +23,6 @@ import {
   setShowValidationErrors
 } from '../../reducers/data-visualization-configuration';
 import {
-  REPORTS_UUID_LIST,
   REPORTS_CONFIGURATION,
   CHART_DESCRIPTION_KEY,
   FILTER_BY_KEY,
@@ -43,7 +42,6 @@ interface IStore {
 }
 
 const DataVisualizationConfiguration = ({
-  reportsUuidList,
   reportsConfiguration,
   reportsList,
   loading,
@@ -54,7 +52,6 @@ const DataVisualizationConfiguration = ({
   initialUpdate,
   success,
   getSettingByQuery,
-  getSettings,
   getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
@@ -67,15 +64,14 @@ const DataVisualizationConfiguration = ({
 
   useEffect(() => {
     getSettingByQuery(REPORTS_CONFIGURATION);
-    getSettings(REPORTS_UUID_LIST);
     getRoles();
-  }, [getSettingByQuery, getSettings]);
+  }, [getSettingByQuery]);
 
   useEffect(() => {
-    if (reportsUuidList?.length && !loading && !getAllReports) {
-      getReportMetadata(reportsUuidList);
+    if (!loading && !getAllReports) {
+      getReportMetadata();
     }
-  }, [reportsUuidList, loading, getAllReports, getReportMetadata]);
+  }, [loading, getAllReports, getReportMetadata]);
 
   useEffect(() => {
     if (configurationSetting.length && !loading && getAllReports && !initialUpdate) {
@@ -185,7 +181,6 @@ const mapStateToProps = ({
   }
 }: IStore) => ({
   loading: settingLoading || reportsLoading,
-  reportsUuidList: settings[0]?.value ? JSON.parse(settings[0].value) : [],
   reportsList,
   reportsConfiguration,
   getAllReports,
@@ -199,7 +194,6 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = {
   getSettingByQuery,
-  getSettings,
   getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
