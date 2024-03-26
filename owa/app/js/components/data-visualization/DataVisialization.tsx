@@ -57,7 +57,7 @@ const DataVisualization = ({
   }, [loading, configurationSetting, initialUpdate, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
-    if (initialUpdate && !reportsList.length) {
+    if (initialUpdate && !reportsList?.length) {
       const configuredReportsUuidList = reportsConfiguration.map(({ uuid }) => uuid);
 
       getReports(configuredReportsUuidList);
@@ -80,7 +80,7 @@ const DataVisualization = ({
 
   const tabPanes = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     const { uuid, chartType } = config;
-    const reportData = reportsList.find(({ uuid: reportUuid }) => reportUuid === uuid)?.reportData as IReportData[];
+    const reportData = reportsList?.find(({ uuid: reportUuid }) => reportUuid === uuid)?.reportData as IReportData[];
     let chartComponent;
 
     switch (chartType) {
@@ -108,7 +108,7 @@ const DataVisualization = ({
         <div className="spinner">
           <Spinner />
         </div>
-      ) : reportsList.length === 0 || authorizedReportConfigs.length === 0 ? (
+      ) : reportsList?.length === 0 || authorizedReportConfigs.length === 0 ? (
         <VisualizationInformationMessage message="cflcharts.visualization.noPermission" />
       ) : (
         <>

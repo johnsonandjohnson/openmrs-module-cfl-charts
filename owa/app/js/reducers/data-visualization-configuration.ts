@@ -66,22 +66,51 @@ const reducer = (state = initialState, action: AnyAction) => {
         loading: false
       };
     }
-    case SUCCESS(ACTION_TYPES.GET_REPORTS):
-    case SUCCESS(ACTION_TYPES.GET_REPORTS_METADATA): {
+    case SUCCESS(ACTION_TYPES.GET_REPORTS):{
       const reportsList = action.payload.map(
         ({
           data: {
             dataSets,
             definition: { name, description },
             uuid
-          }
-        }: IGetReportsActionPayload) => {
+          }  
+        }: any) => {
           const [report] = dataSets;
           const {
             metadata: { columns },
             rows
           } = report;
-
+          return {
+            uuid,
+            name,
+            description,
+            columns: columns.map(({ name }) => name),
+            reportData: rows
+          };
+        }
+      );
+      return {
+        ...state,
+        loading: false,
+        success: {
+          ...state.success,
+          getAllReports: true
+        },
+        reportsList
+      };
+    }
+    case SUCCESS(ACTION_TYPES.GET_REPORTS_METADATA): {
+      const reportsList = action.payload.data?.results.map(
+        ({
+            dataSets,
+            definition: { name, description },
+            uuid
+        }: any) => {
+          const [report] = dataSets;
+          const {
+            metadata: { columns },
+            rows
+          } = report;
           return {
             uuid,
             name,
@@ -142,9 +171,9 @@ export const getReports = (uuids: string[]) => ({
   payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}cflcharts/reportdata/${uuid}`)))
 });
 
-export const getReportMetadata = (uuids: string[]) => ({
+export const getReportMetadata = () => ({
   type: ACTION_TYPES.GET_REPORTS_METADATA,
-  payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}cflcharts/reportmetadata/${uuid}`)))
+  payload: axios.get(`${WS_REST_V1_URL}cflcharts/reportdata`)
 });
 
 export const addReportConfigurationBlock = () => ({
