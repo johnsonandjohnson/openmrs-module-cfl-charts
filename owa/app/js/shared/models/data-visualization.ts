@@ -101,11 +101,12 @@ export interface IReportConfiguration {
 export interface IDataVisualizationConfigurationState {
   loading: boolean;
   reportsList: IReportList[];
+  report: IReportList;
   initialUpdate: boolean;
   reportsConfiguration: IReportConfiguration[];
   errorMessage: string;
   success: {
-    getReport: boolean;
+    reportLoaded: boolean;
     getAllReports: boolean;
   };
   showValidationErrors: boolean;
