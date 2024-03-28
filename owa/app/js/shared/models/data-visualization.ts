@@ -106,10 +106,10 @@ export interface IDataVisualizationConfigurationState {
   reportsConfiguration: IReportConfiguration[];
   errorMessage: string;
   success: {
-    reportLoaded: boolean;
     getAllReports: boolean;
   };
   showValidationErrors: boolean;
+  reportLoading: boolean;
 }
 
 export interface IGroupedAndSummedDataByXAxis {

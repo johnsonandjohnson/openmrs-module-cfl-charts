@@ -44,10 +44,10 @@ const initialState: IDataVisualizationConfigurationState = {
   reportsConfiguration: [DEFAULT_REPORT_CONFIGURATION],
   errorMessage: '',
   success: {
-    reportLoaded: false,
     getAllReports: false
   },
-  showValidationErrors: false
+  showValidationErrors: false,
+  reportLoading: false
 };
 
 const reducer = (state = initialState, action: AnyAction) => {
@@ -55,10 +55,7 @@ const reducer = (state = initialState, action: AnyAction) => {
     case REQUEST(ACTION_TYPES.GET_REPORT):
       return {
         ...state,
-        success: {
-          ...state.success,
-          reportLoaded: false
-        }
+        reportLoading: true
       };
     case REQUEST(ACTION_TYPES.GET_REPORTS):
     case REQUEST(ACTION_TYPES.GET_REPORTS_METADATA):
@@ -67,6 +64,10 @@ const reducer = (state = initialState, action: AnyAction) => {
         loading: true
       };
     case FAILURE(ACTION_TYPES.GET_REPORT):
+      return {
+        ...state,
+        reportLoading: false,
+      };
     case FAILURE(ACTION_TYPES.GET_REPORTS):
     case FAILURE(ACTION_TYPES.GET_REPORTS_METADATA): {
       const {
@@ -80,11 +81,7 @@ const reducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         errorMessage,
-        loading: false,
-        success: {
-          ...state.success,
-          reportLoaded: true
-        }
+        loading: false
       };
     }
     case SUCCESS(ACTION_TYPES.GET_REPORT): {
@@ -112,11 +109,7 @@ const reducer = (state = initialState, action: AnyAction) => {
 
       return {
         ...state,
-        loading: false,
-        success: {
-          ...state.success,
-          reportLoaded: true
-        },
+        reportLoading: false,
         report
       };
     }

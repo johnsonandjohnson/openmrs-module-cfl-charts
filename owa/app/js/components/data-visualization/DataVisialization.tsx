@@ -37,7 +37,7 @@ const DataVisualization = ({
   report,
   errorMessage,
   userRoles,
-  reportLoaded,
+  reportLoading,
   getReport,
   getSettingByQuery,
   initialUpdateReportsConfiguration,
@@ -127,7 +127,7 @@ const DataVisualization = ({
       <FormattedMessage id="cflcharts.visualization" tagName="h1" />
       {errorMessage ? (
         <VisualizationInformationMessage message="cflcharts.visualization.sqlError" />
-      ) : !reportLoaded ? (
+      ) : loading || reportLoading ? (
         <div className="spinner">
           <Spinner />
         </div>
@@ -150,9 +150,7 @@ const mapStateToProps = ({
     reportsConfiguration, 
     report, 
     errorMessage,
-    success: {
-      reportLoaded
-    }
+    reportLoading
   },
   session: { userRoles }
 }: IStore) => ({
@@ -163,7 +161,7 @@ const mapStateToProps = ({
   report,
   errorMessage,
   userRoles,
-  reportLoaded
+  reportLoading
 });
 
 const mapDispatchToProps = {
