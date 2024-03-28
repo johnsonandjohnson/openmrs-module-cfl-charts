@@ -29,3 +29,30 @@
       }
     }
   }
+
+  #app .data-visualization-configuration {
+    .section {
+      padding: 1.5em;
+  
+      .expandable-section-header {
+        .order-icons {
+          justify-content: center;
+          padding-right: 12px;
+  
+          .glyphicon-chevron-up,
+          .glyphicon-chevron-down {
+            cursor: pointer;
+          }
+  
+          .glyphicon-chevron-up {
+            margin-bottom: 0.5em;
+          }
+        }
+  
+        .action-icons-inner img {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  

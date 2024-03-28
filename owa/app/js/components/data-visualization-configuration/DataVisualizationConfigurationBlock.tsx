@@ -26,7 +26,7 @@ const DataVisualizationConfigurationBlock = ({ reportConfig, reportData, reportI
   return (
     <div className="section">
       <ExpandableSection
-        headerComponent={<DataVisualizationConfigurationHeader reportConfig={reportConfig} />}
+        headerComponent={<DataVisualizationConfigurationHeader reportConfig={reportConfig} reportIdx={reportIdx} />}
         bodyComponent={<DataVisualizationConfigurationBody reportConfig={reportConfig} reportData={reportData} reportIdx={reportIdx} />}
         isRemovable={true}
         onRemove={() => removeReport(reportIdx)}
