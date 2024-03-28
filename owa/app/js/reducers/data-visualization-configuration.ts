@@ -20,6 +20,7 @@ import {
 } from '../shared/models/data-visualization';
 
 const ACTION_TYPES = {
+  GET_REPORT: 'report/GET_REPORT',
   GET_REPORTS: 'report/GET_REPORTS',
   GET_REPORTS_METADATA: 'report/GET_REPORTS_METADATA',
   ADD_REPORT_CONFIGURATION_BLOCK: 'report/ADD_REPORT_CONFIGURATION_BLOCK',
@@ -32,11 +33,18 @@ const ACTION_TYPES = {
 const initialState: IDataVisualizationConfigurationState = {
   loading: false,
   reportsList: [],
+  report: {
+    uuid: '',
+    name: '',
+    description: '',
+    columns: [],
+    reportData: []
+  },
   initialUpdate: false,
   reportsConfiguration: [DEFAULT_REPORT_CONFIGURATION],
   errorMessage: '',
   success: {
-    getReport: false,
+    reportLoaded: false,
     getAllReports: false
   },
   showValidationErrors: false
@@ -44,12 +52,21 @@ const initialState: IDataVisualizationConfigurationState = {
 
 const reducer = (state = initialState, action: AnyAction) => {
   switch (action.type) {
+    case REQUEST(ACTION_TYPES.GET_REPORT):
+      return {
+        ...state,
+        success: {
+          ...state.success,
+          reportLoaded: false
+        }
+      };
     case REQUEST(ACTION_TYPES.GET_REPORTS):
     case REQUEST(ACTION_TYPES.GET_REPORTS_METADATA):
       return {
         ...state,
         loading: true
       };
+    case FAILURE(ACTION_TYPES.GET_REPORT):
     case FAILURE(ACTION_TYPES.GET_REPORTS):
     case FAILURE(ACTION_TYPES.GET_REPORTS_METADATA): {
       const {
@@ -63,7 +80,44 @@ const reducer = (state = initialState, action: AnyAction) => {
       return {
         ...state,
         errorMessage,
-        loading: false
+        loading: false,
+        success: {
+          ...state.success,
+          reportLoaded: true
+        }
+      };
+    }
+    case SUCCESS(ACTION_TYPES.GET_REPORT): {
+      const {
+        data: {
+          dataSets,
+          definition: { name, description },
+          uuid
+        } 
+      } = action.payload;
+
+      const [reportDataSets] = dataSets;
+      const {
+        metadata: { columns },
+        rows
+      } = reportDataSets;
+
+      const report = {
+        uuid,
+        name,
+        description,
+        columns: columns.map(({ name }) => name),
+        reportData: rows
+      }
+
+      return {
+        ...state,
+        loading: false,
+        success: {
+          ...state.success,
+          reportLoaded: true
+        },
+        report
       };
     }
     case SUCCESS(ACTION_TYPES.GET_REPORTS): {
@@ -169,6 +223,11 @@ export default reducer;
 export const getReports = (uuids: string[]) => ({
   type: ACTION_TYPES.GET_REPORTS,
   payload: Promise.all(uuids.map(uuid => axios.get(`${WS_REST_V1_URL}cflcharts/reportdata/${uuid}`)))
+});
+
+export const getReport = (uuid: string) => ({
+  type: ACTION_TYPES.GET_REPORT,
+  payload: axios.get(`${WS_REST_V1_URL}cflcharts/reportdata/${uuid}`)
 });
 
 export const getReportMetadata = () => ({

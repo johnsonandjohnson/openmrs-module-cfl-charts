@@ -20,7 +20,7 @@ import { ISettingsState } from '../../shared/models/settings';
 import { getSession } from '../../reducers/session'
 import { LINE_CHART, REPORTS_CONFIGURATION } from '../../shared/constants/data-visualization-configuration';
 import { IDataVisualizationConfigurationState, IReportConfiguration, IReportData } from '../../shared/models/data-visualization';
-import { initialUpdateReportsConfiguration, getReports } from '../../reducers/data-visualization-configuration';
+import { initialUpdateReportsConfiguration, getReports, getReport } from '../../reducers/data-visualization-configuration';
 import VisualizationInformationMessage from '../common/data-visualization/VisualizationInformationMessage';
 
 interface IStore {
@@ -34,15 +34,17 @@ const DataVisualization = ({
   loading,
   initialUpdate,
   reportsConfiguration,
-  reportsList,
+  report,
   errorMessage,
   userRoles,
-  getReports,
+  reportLoaded,
+  getReport,
   getSettingByQuery,
   initialUpdateReportsConfiguration,
   getSession
 }: StateProps & DispatchProps) => {
   const [activeTab, setActiveTab] = useState('0');
+  const [retrievedReports, setRetrievedReports] = useState<any[]>([]);
 
   useEffect(() => {
     getSession();
@@ -53,16 +55,29 @@ const DataVisualization = ({
   }, [getSettingByQuery]);
 
   useEffect(() => {
-    if (!loading && configurationSetting.length && !initialUpdate) initialUpdateReportsConfiguration(configurationSetting);
+    if (!loading && configurationSetting.length && !initialUpdate) {
+      initialUpdateReportsConfiguration(configurationSetting);
+    }
   }, [loading, configurationSetting, initialUpdate, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
-    if (initialUpdate && !reportsList?.length) {
+    if ((initialUpdate && !report) || report.uuid === '') {  
       const configuredReportsUuidList = reportsConfiguration.map(({ uuid }) => uuid);
-
-      getReports(configuredReportsUuidList);
+      const firstReportUuid = configuredReportsUuidList[0];
+      if (firstReportUuid) {
+        getReport(firstReportUuid);
+      }
     }
-  }, [initialUpdate, reportsList, reportsConfiguration, getReports]);
+  }, [initialUpdate, report, reportsConfiguration, getReport]);
+
+  useEffect(() => {
+    if (report) {
+      const isReportAlreadyRetrieved = retrievedReports.some(obj => obj.uuid === report.uuid);
+      if (!isReportAlreadyRetrieved && report.uuid !== '') {
+        setRetrievedReports([...retrievedReports, report]);
+      }
+    }
+  }, [report]);
 
   const authorizedReportConfigs = configurationSetting.filter(config => !config.roles || config.roles?.split(',')
     .some(chartRoleUuid => userRoles.map(userRole => userRole.uuid)
@@ -71,7 +86,15 @@ const DataVisualization = ({
   const navItems = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     return (
       <NavItem key={`${config.uuid}-${idx}`}>
-        <NavLink className={cx({ active: activeTab === `${idx}` })} onClick={() => setActiveTab(`${idx}`)}>
+        <NavLink 
+          className={cx({ active: activeTab === `${idx}` })} 
+          onClick={() =>  {
+            setActiveTab(`${idx}`)
+            const isReportAlreadyRetrieved = retrievedReports.some(obj => obj.uuid === config.uuid);
+            if (!isReportAlreadyRetrieved) {
+              getReport(config.uuid);
+            }
+          }}>
           {config.title}
         </NavLink>
       </NavItem>
@@ -80,7 +103,7 @@ const DataVisualization = ({
 
   const tabPanes = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     const { uuid, chartType } = config;
-    const reportData = reportsList?.find(({ uuid: reportUuid }) => reportUuid === uuid)?.reportData as IReportData[];
+    const reportData = retrievedReports?.find(({ uuid: reportUuid }) => reportUuid === uuid)?.reportData as IReportData[];
     let chartComponent;
 
     switch (chartType) {
@@ -104,11 +127,11 @@ const DataVisualization = ({
       <FormattedMessage id="cflcharts.visualization" tagName="h1" />
       {errorMessage ? (
         <VisualizationInformationMessage message="cflcharts.visualization.sqlError" />
-      ) : loading ? (
+      ) : !reportLoaded ? (
         <div className="spinner">
           <Spinner />
         </div>
-      ) : reportsList?.length === 0 || authorizedReportConfigs.length === 0 ? (
+      ) : retrievedReports?.length === 0 || authorizedReportConfigs.length === 0 ? (
         <VisualizationInformationMessage message="cflcharts.visualization.noPermission" />
       ) : (
         <>
@@ -122,20 +145,29 @@ const DataVisualization = ({
 
 const mapStateToProps = ({
   settings: { setting, loading },
-  reports: { initialUpdate, reportsConfiguration, reportsList, errorMessage },
+  reports: { 
+    initialUpdate, 
+    reportsConfiguration, 
+    report, 
+    errorMessage,
+    success: {
+      reportLoaded
+    }
+  },
   session: { userRoles }
 }: IStore) => ({
   loading,
   configurationSetting: setting?.value ? JSON.parse(setting.value) : [],
   initialUpdate,
   reportsConfiguration,
-  reportsList,
+  report,
   errorMessage,
-  userRoles
+  userRoles,
+  reportLoaded
 });
 
 const mapDispatchToProps = {
-  getReports,
+  getReport,
   getSettingByQuery,
   initialUpdateReportsConfiguration,
   getSession
