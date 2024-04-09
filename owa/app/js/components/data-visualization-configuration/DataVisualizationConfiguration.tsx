@@ -8,33 +8,33 @@
  * graphic logo is a trademark of OpenMRS Inc.
  */
 
-import React, { useEffect } from 'react';
-import { injectIntl } from 'react-intl';
-import DataVisualizationConfigurationBlock from './DataVisualizationConfigurationBlock';
-import { connect } from 'react-redux';
-import { FormattedMessage } from 'react-intl';
-import { Button, Spinner } from 'reactstrap';
-import { getSettingByQuery, createSetting, updateSetting } from '../../reducers/setttings';
-import { getRoles } from '../../reducers/role';
+import React, { useEffect } from "react";
+import { injectIntl } from "react-intl";
+import DataVisualizationConfigurationBlock from "./DataVisualizationConfigurationBlock";
+import { connect } from "react-redux";
+import { FormattedMessage } from "react-intl";
+import { Button, Spinner } from "reactstrap";
+import { getSettingByQuery, createSetting, updateSetting } from "../../reducers/setttings";
+import { getRoles } from "../../reducers/role";
 import {
   getReportMetadata,
   addReportConfigurationBlock,
   initialUpdateReportsConfiguration,
-  setShowValidationErrors
-} from '../../reducers/data-visualization-configuration';
+  setShowValidationErrors,
+} from "../../reducers/data-visualization-configuration";
 import {
   REPORTS_CONFIGURATION,
   CHART_DESCRIPTION_KEY,
   FILTER_BY_KEY,
   SELECT_ROLES_KEY,
-  CONFIGURE_METADATA_URL
-} from '../../shared/constants/data-visualization-configuration';
-import { IDataVisualizationConfigurationState, IReportList } from '../../shared/models/data-visualization';
-import { ISettingsState } from '../../shared/models/settings';
-import { omit } from 'lodash';
-import { EMPTY_STRING } from '../../shared/constants/input';
-import { errorToast, successToast } from '../toast-handler/toast-handler';
-import '../../../css/Inputs.scss';
+  CONFIGURE_METADATA_URL,
+} from "../../shared/constants/data-visualization-configuration";
+import { IDataVisualizationConfigurationState, IReportList } from "../../shared/models/data-visualization";
+import { ISettingsState } from "../../shared/models/settings";
+import { omit } from "lodash";
+import { EMPTY_STRING } from "../../shared/constants/input";
+import { errorToast, successToast } from "../toast-handler/toast-handler";
+import "../../../css/Inputs.scss";
 
 interface IStore {
   settings: ISettingsState;
@@ -59,9 +59,8 @@ const DataVisualizationConfiguration = ({
   updateSetting,
   createSetting,
   getRoles,
-  intl
+  intl,
 }: PropsWithIntl<StateProps & DispatchProps>) => {
-
   useEffect(() => {
     getSettingByQuery(REPORTS_CONFIGURATION);
     getRoles();
@@ -80,7 +79,7 @@ const DataVisualizationConfiguration = ({
   }, [configurationSetting, getAllReports, initialUpdate, loading, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
-    success && successToast(intl.formatMessage({ id: 'cflcharts.configurationSavedSuccessfully' }));
+    success && successToast(intl.formatMessage({ id: "cflcharts.configurationSavedSuccessfully" }));
   }, [success]);
 
   const onReturn = () => (window.location.href = CONFIGURE_METADATA_URL);
@@ -88,32 +87,32 @@ const DataVisualizationConfiguration = ({
   const onSave = () => {
     let showValidationErrors = false;
 
-    reportsConfiguration.forEach(report => {
+    reportsConfiguration.forEach((report) => {
       const omittedOptional = omit(report, [CHART_DESCRIPTION_KEY, FILTER_BY_KEY, SELECT_ROLES_KEY]);
 
-      Object.keys(omittedOptional).forEach(key => {
+      Object.keys(omittedOptional).forEach((key) => {
         if (omittedOptional[key] === EMPTY_STRING) {
           showValidationErrors = true;
         }
       });
 
       if (report.configFilters?.length > 0) {
-        report.configFilters = report.configFilters.filter(filter => !!filter.name && !!filter.label);
+        report.configFilters = report.configFilters.filter((filter) => !!filter.name && !!filter.label);
       } else {
-        report.configFilters = [{ name: EMPTY_STRING, label: EMPTY_STRING }]
+        report.configFilters = [{ name: EMPTY_STRING, label: EMPTY_STRING }];
       }
     });
 
     setShowValidationErrors(showValidationErrors);
 
     if (showValidationErrors) {
-      return errorToast(intl.formatMessage({ id: 'cflcharts.configurationNotSaved' }));
+      return errorToast(intl.formatMessage({ id: "cflcharts.configurationNotSaved" }));
     }
 
     if (isConfigurationExist) {
       const dataToSave = {
         uuid: settingUuid,
-        value: JSON.stringify(reportsConfiguration)
+        value: JSON.stringify(reportsConfiguration),
       };
       updateSetting(dataToSave);
     } else {
@@ -123,7 +122,10 @@ const DataVisualizationConfiguration = ({
 
   return (
     <div className="data-visualization-configuration">
-      <FormattedMessage id="cflcharts.configuration" tagName="h1" />
+      <FormattedMessage
+        id="cflcharts.configuration"
+        tagName="h1"
+      />
       {!getAllReports ? (
         <div className="spinner">
           <Spinner />
@@ -142,19 +144,28 @@ const DataVisualizationConfiguration = ({
             );
           })}
           <div className="d-flex justify-content-end mt-4 mb-2">
-            <Button className="btn btn-primary" onClick={addReportConfigurationBlock}>
+            <Button
+              className="btn btn-primary"
+              onClick={addReportConfigurationBlock}
+            >
               <FormattedMessage id="cflcharts.addNewReport" />
             </Button>
           </div>
           <div className="mt-5 pb-5">
             <div className="d-inline">
-              <Button className="cancel" onClick={onReturn}>
-                <FormattedMessage id="common.return" />
+              <Button
+                className="cancel"
+                onClick={onReturn}
+              >
+                <FormattedMessage id="common.cancel" />
               </Button>
             </div>
             <div className="d-inline pull-right confirm-button-container">
-              <Button className="save" onClick={onSave}>
-                <FormattedMessage id="common.save" />
+              <Button
+                className="save"
+                onClick={onSave}
+              >
+                <FormattedMessage id="common.confirm" />
               </Button>
             </div>
           </div>
@@ -170,15 +181,15 @@ const mapStateToProps = ({
     setting,
     loading: settingLoading,
     isSettingExist: { value: isConfigurationExist },
-    success
+    success,
   },
   reports: {
     reportsList,
     loading: reportsLoading,
     reportsConfiguration,
     success: { getAllReports },
-    initialUpdate
-  }
+    initialUpdate,
+  },
 }: IStore) => ({
   loading: settingLoading || reportsLoading,
   reportsList,
@@ -189,7 +200,7 @@ const mapStateToProps = ({
   settingUuid: setting?.uuid,
   configurationSetting: setting?.value ? JSON.parse(setting.value) : [],
   initialUpdate,
-  success
+  success,
 });
 
 const mapDispatchToProps = {
@@ -200,7 +211,7 @@ const mapDispatchToProps = {
   setShowValidationErrors,
   updateSetting,
   createSetting,
-  getRoles
+  getRoles,
 };
 
 type StateProps = ReturnType<typeof mapStateToProps>;
