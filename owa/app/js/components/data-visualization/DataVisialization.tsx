@@ -46,6 +46,10 @@ const DataVisualization = ({
   const [activeTab, setActiveTab] = useState('0');
   const [retrievedReports, setRetrievedReports] = useState<any[]>([]);
 
+  const authorizedReportConfigs = configurationSetting.filter(config => !config.roles || config.roles?.split(',')
+    .some(chartRoleUuid => userRoles.map(userRole => userRole.uuid)
+      .includes(chartRoleUuid)));
+
   useEffect(() => {
     getSession();
   }, []);
@@ -55,10 +59,10 @@ const DataVisualization = ({
   }, [getSettingByQuery]);
 
   useEffect(() => {
-    if (!loading && configurationSetting.length && !initialUpdate) {
-      initialUpdateReportsConfiguration(configurationSetting);
+    if (!loading && authorizedReportConfigs.length && !initialUpdate) {
+      initialUpdateReportsConfiguration(authorizedReportConfigs);
     }
-  }, [loading, configurationSetting, initialUpdate, initialUpdateReportsConfiguration]);
+  }, [loading, authorizedReportConfigs, initialUpdate, initialUpdateReportsConfiguration]);
 
   useEffect(() => {
     if ((initialUpdate && !report) || report.uuid === '') {  
@@ -78,10 +82,6 @@ const DataVisualization = ({
       }
     }
   }, [report]);
-
-  const authorizedReportConfigs = configurationSetting.filter(config => !config.roles || config.roles?.split(',')
-    .some(chartRoleUuid => userRoles.map(userRole => userRole.uuid)
-    .includes(chartRoleUuid)));
 
   const navItems = authorizedReportConfigs.map((config: IReportConfiguration, idx: number) => {
     return (
