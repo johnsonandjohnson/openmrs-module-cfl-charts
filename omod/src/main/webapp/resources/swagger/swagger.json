@@ -1,9 +1,0 @@
-{
-  "swagger" : "2.0",
-  "info" : {
-    "description" : "REST API for Report Charts Module.",
-    "version" : "v1",
-    "title" : "Report Charts Module REST API"
-  },
-  "basePath" : "/openmrs/ws"
-}

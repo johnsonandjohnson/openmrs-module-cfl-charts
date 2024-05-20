@@ -26,11 +26,6 @@
         <aware_of_module version="${metadatasharingVersion}">org.openmrs.module.metadatasharing</aware_of_module>
     </aware_of_modules>
 
-    <extension>
-        <point>org.openmrs.admin.list</point>
-        <class>org.openmrs.module.cflcharts.extension.html.AdminList</class>
-    </extension>
-
     <privilege>
         <name>View Charts</name>
         <description>Able to see charts page</description>
